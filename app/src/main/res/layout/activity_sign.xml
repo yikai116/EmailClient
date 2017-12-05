@@ -1,9 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.exercise.p.emailclient.activity.SignActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-</android.support.constraint.ConstraintLayout>
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="show"
+            type="Boolean" />
+        <variable
+            name="user"
+            type="com.exercise.p.emailclient.dto.param.User"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/sign_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@string/logo"
+                android:src="@drawable/logo"
+                android:visibility="@{show? View.VISIBLE:View.GONE}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="30dp">
+
+                <EditText
+                    android:id="@+id/sign_edit_email"
+                    style="@style/SignEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_sign_edit"
+                    android:drawableStart="@drawable/icon_sign_username"
+                    android:text="@={user.email}"
+                    android:hint="@string/emailHint"
+                    android:inputType="textEmailAddress"
+                    android:lines="1" />
+
+                <EditText
+                    android:id="@+id/sign_edit_psw"
+                    style="@style/SignEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/shape_sign_edit"
+                    android:drawableStart="@drawable/icon_sign_userpsw"
+                    android:text="@={user.password}"
+                    android:hint="@string/pswHint"
+                    android:inputType="textPassword"
+                    android:lines="1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <EditText
+                        android:id="@+id/sign_edit_check_code"
+                        style="@style/SignEdit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:background="@drawable/shape_sign_edit"
+                        android:drawableStart="@drawable/icon_sign_userpsw"
+                        android:text="@={user.checkCode}"
+                        android:hint="@string/checkCodeHint"
+                        android:inputType="number"
+                        android:lines="1" />
+
+                    <ImageView
+                        android:id="@+id/sign_img_check_code"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
+
+                    <Button
+                        android:id="@+id/sign_button_reget_code"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/regetCode"
+                        android:textColor="#FFF"
+                        android:background="@drawable/shape_4corner_3dp_themecolor"
+                        />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/sign_button_sign_in"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="25dp"
+                    android:background="@drawable/shape_4corner_3dp_themecolor"
+                    android:text="@string/signIn"
+                    android:textColor="#FFF"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:visibility="@{show? View.VISIBLE:View.GONE}"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>
+
