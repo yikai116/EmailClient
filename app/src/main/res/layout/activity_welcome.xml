@@ -14,7 +14,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/logo"
+            android:id="@+id/wel_logo"/>
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"

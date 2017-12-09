@@ -3,6 +3,7 @@ package com.exercise.p.emailclient.activity;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;

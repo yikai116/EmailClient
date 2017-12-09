@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.exercise.p.emailclient.GlobalInfo;
@@ -14,27 +15,31 @@ import com.exercise.p.emailclient.dto.data.Sign;
 import com.exercise.p.emailclient.model.RetrofitInstance;
 import com.exercise.p.emailclient.model.WelcomeModel;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class WelcomeActivity extends AppCompatActivity {
 
+    @BindView(R.id.wel_logo)
+    ImageView welLogo;
     private boolean tag = false;
     private Handler handler = new Handler();
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            tag = false;
             Intent intent = new Intent();
-            if (tag){
+            if (tag) {
                 intent.setClass(WelcomeActivity.this, MainActivity.class);
-            }
-            else {
+            } else {
                 intent.setClass(WelcomeActivity.this, SignActivity.class);
             }
             startActivity(intent);
             handler.removeCallbacks(this);
-            WelcomeActivity.this.supportFinishAfterTransition();
+            WelcomeActivity.this.finish();
         }
     };
 
@@ -42,8 +47,9 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        SharedPreferences preferences = getSharedPreferences("Info",MODE_PRIVATE);
-        String token = preferences.getString("token","");
+        ButterKnife.bind(this);
+        SharedPreferences preferences = getSharedPreferences("Info", MODE_PRIVATE);
+        String token = preferences.getString("token", "");
         GlobalInfo.cookie = "accessToken=" + token + ";";
         WelcomeModel model = RetrofitInstance.getRetrofitWithToken().create(WelcomeModel.class);
         Call<MyResponse<Sign>> call = model.verToken();
