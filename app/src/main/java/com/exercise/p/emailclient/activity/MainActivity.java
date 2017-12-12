@@ -1,5 +1,6 @@
 package com.exercise.p.emailclient.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -167,6 +168,9 @@ public class MainActivity extends AppCompatActivity {
                                 Log.i(SignActivity.TAG,"click 7 " + ((PrimaryDrawerItem)drawerItem).getName().toString());
                                 temp = side_select;
                                 result.setSelection(side_select,false);
+                                Intent intent = new Intent();
+                                intent.setClass(MainActivity.this,FeedbackActivity.class);
+                                startActivity(intent);
                                 break;
                         }
                         side_select = temp;
