@@ -5,9 +5,15 @@
         <item name="colorControlNormal">#93A8AC</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorDeepText</item>
         <item name="android:textColorHint">@color/colorHint</item>
         <item name="android:drawablePadding">15dp</item>
         <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="SideText">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorDeepText</item>
     </style>
 
 </resources>

@@ -8,5 +8,5 @@ import com.exercise.p.emailclient.dto.data.Sign;
 
 public class GlobalInfo {
     public static Sign user = null;
-    public static String cookie = "";
+    public static String authorization = "";
 }

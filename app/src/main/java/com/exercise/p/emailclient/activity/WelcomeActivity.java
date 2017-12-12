@@ -30,7 +30,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            tag = false;
+//            tag = true;
             Intent intent = new Intent();
             if (tag) {
                 intent.setClass(WelcomeActivity.this, MainActivity.class);
@@ -50,19 +50,21 @@ public class WelcomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         SharedPreferences preferences = getSharedPreferences("Info", MODE_PRIVATE);
         String token = preferences.getString("token", "");
-        GlobalInfo.cookie = "accessToken=" + token + ";";
+        GlobalInfo.authorization = "Bearer " + token;
         WelcomeModel model = RetrofitInstance.getRetrofitWithToken().create(WelcomeModel.class);
         Call<MyResponse<Sign>> call = model.verToken();
         call.enqueue(new Callback<MyResponse<Sign>>() {
             @Override
             public void onResponse(Call<MyResponse<Sign>> call, Response<MyResponse<Sign>> response) {
                 MyResponse<Sign> myResponse = response.body();
-                if (myResponse.getCode() != 200) {
-                    Toast.makeText(WelcomeActivity.this, myResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    tag = false;
-                } else {
-                    GlobalInfo.user = myResponse.getData();
-                    tag = true;
+                if ((myResponse != null)) {
+                    if (myResponse.getCode() != 200) {
+                        Toast.makeText(WelcomeActivity.this, myResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        tag = false;
+                    } else {
+                        GlobalInfo.user = myResponse.getData();
+                        tag = true;
+                    }
                 }
                 handler.postDelayed(runnable, 1000);
             }

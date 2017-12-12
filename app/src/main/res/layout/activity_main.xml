@@ -1,9 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.exercise.p.emailclient.activity.MainActivity">
+    tools:context="com.exercise.p.citicup.activity.MainActivity">
+    <!--//主布局内容-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="?colorPrimary"
+            android:translationZ="2dp"/>
+        <FrameLayout
+            android:id="@+id/main_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center" />
+    </LinearLayout>
+    <!--//侧边栏布局内容-->
+    <!--<android.support.design.widget.NavigationView-->
+        <!--android:id="@+id/main_side"-->
+        <!--android:layout_gravity = "start"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:itemTextAppearance="@style/SideText"-->
+        <!--app:headerLayout="@layout/layout_side_header"-->
+        <!--app:menu="@menu/menu_side" />-->
+</android.support.v4.widget.DrawerLayout>

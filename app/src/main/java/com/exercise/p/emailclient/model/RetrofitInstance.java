@@ -48,7 +48,7 @@ public class RetrofitInstance {
                         public Response intercept(Chain chain) throws IOException {
                             Request request = chain.request();
                             Request.Builder builder1 = request.newBuilder();
-                            Request newRequest = builder1.addHeader("Cookie", GlobalInfo.cookie).build();
+                            Request newRequest = builder1.addHeader("Authorization", GlobalInfo.authorization).build();
                             return chain.proceed(newRequest);
                         }
                     })

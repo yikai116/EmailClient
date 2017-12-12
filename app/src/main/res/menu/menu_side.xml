@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group
+        android:id="@+id/side_tag_group">
+        <item
+            android:id="@+id/side_all"
+            android:icon="@drawable/icon_side_all"
+            app:actionViewClass="android.widget.TextView"
+            android:title="所有邮件" />
+
+        <item
+            android:id="@+id/side_sent"
+            android:icon="@drawable/icon_side_sent"
+            app:actionViewClass="android.widget.TextView"
+            android:title="已发邮件" />
+
+
+        <item
+            android:id="@+id/side_draft"
+            android:icon="@drawable/icon_side_draft"
+            app:actionViewClass="android.widget.TextView"
+            android:title="草稿箱" />
+
+
+        <item
+            android:id="@+id/side_garbage"
+            android:icon="@drawable/icon_side_garbage"
+            app:actionViewClass="android.widget.TextView"
+            android:title="垃圾邮件" />
+
+        <item
+            android:id="@+id/side_delete"
+            android:icon="@drawable/icon_side_delete"
+            app:actionViewClass="android.widget.TextView"
+            android:title="已删除" />
+
+    </group>
+
+    <group
+        android:id="@+id/side_setting_group">
+        <item
+            android:id="@+id/side_setting"
+            android:icon="@drawable/icon_side_setting"
+            android:title="设置"/>
+        <item
+            android:id="@+id/feedback"
+            android:icon="@drawable/icon_side_feedback"
+            android:title="帮助和反馈"/>
+    </group>
+
+</menu>
