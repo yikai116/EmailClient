@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.exercise.p.emailclient.activity.FeedbackActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/feedback_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="?colorPrimary"
+        android:translationZ="2dp">
+
+        <TextView
+            android:textSize="16sp"
+            android:textColor="#FFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="意见反馈" />
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:text="问题和意见" />
+
+        <EditText
+            android:id="@+id/fb_question_des"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_4corner_3dp_fff"
+            android:gravity="top"
+            android:hint="请输入10个字以上的问题描述，以便我们提供更好的帮助"
+            android:inputType="textMultiLine"
+            android:minLines="5"
+            android:padding="10dp"
+            android:scrollbars="vertical"
+            android:textAlignment="viewStart"
+            android:textSize="12sp"
+            android:textColor="@color/colorDeepText"
+            android:translationZ="1dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:text="图片（可选、最多四张）" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_4corner_3dp_fff"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:translationZ="1dp">
+
+            <ImageView
+                android:id="@+id/fd_pic1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/fd_pic2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/fd_pic3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/fd_pic4"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/add"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/icon_feedback_add_picture" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:text="联系电话" />
+
+        <EditText
+            android:id="@+id/fd_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_4corner_3dp_fff"
+            android:gravity="top"
+            android:hint="选填，方便我们与您联系"
+            android:inputType="phone"
+            android:maxLines="1"
+            android:minLines="1"
+            android:padding="10dp"
+            android:scrollbars="vertical"
+            android:textSize="12sp"
+            android:textColor="@color/colorDeepText"
+            android:translationZ="1dp" />
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="9dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_test_button"
+            android:text="提交"
+            android:textColor="#FFF"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</LinearLayout>
