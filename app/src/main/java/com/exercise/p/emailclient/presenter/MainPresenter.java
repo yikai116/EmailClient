@@ -35,19 +35,17 @@ public class MainPresenter {
                 MyResponse<ArrayList<Email>> myResponse = response.body();
                 if ((myResponse != null)) {
                     if (myResponse.getCode() == 200) {
+                        GlobalInfo.accounts.clear();
                         GlobalInfo.accounts.addAll(myResponse.getData());
                         if (GlobalInfo.accounts.size() == 0) {
                             view.toAddAccountActivity();
                         } else {
-                            if (GlobalInfo.currentEmail == null) {
-                                GlobalInfo.currentEmail = GlobalInfo.accounts.get(0);
-                            }
+                            GlobalInfo.currentEmail = GlobalInfo.accounts.get(0);
                             view.updateDrawer();
-                            if (changeAccount){
+                            if (changeAccount) {
                                 // todo
                                 view.showProgress(false);
-                            }
-                            else {
+                            } else {
                                 view.showProgress(false);
                             }
                         }

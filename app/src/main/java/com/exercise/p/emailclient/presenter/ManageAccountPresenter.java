@@ -5,60 +5,57 @@ import android.util.Log;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.activity.SignActivity;
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.param.Email;
+import com.exercise.p.emailclient.dto.data.Email;
 import com.exercise.p.emailclient.model.AccountModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;
-import com.exercise.p.emailclient.utils.FormatUtils;
-import com.exercise.p.emailclient.view.AddAccountView;
+import com.exercise.p.emailclient.view.ManageAccountView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by p on 2017/12/13.
+ * Created by p on 2017/12/15.
  */
 
-public class AccountPresenter {
-    private AccountModel model;
-    private AddAccountView view;
+public class ManageAccountPresenter {
+    private AccountModel accountModel;
+    private ManageAccountView view;
 
-    public AccountPresenter(AddAccountView view) {
-        model = RetrofitInstance.getRetrofitWithToken().create(AccountModel.class);
+    public ManageAccountPresenter(ManageAccountView view) {
         this.view = view;
+        accountModel = RetrofitInstance.getRetrofitWithToken().create(AccountModel.class);
     }
 
-    public void submitAccount(final Email email){
-        if (!FormatUtils.emailFormat(email.getAccount())) {
-            view.showMessage("邮箱格式错误");
-            return;
-        }
-        if (email.getPassword().length() < 6) {
-            view.showMessage("密码格式错误");
-            return;
-        }
+    public void delete(ArrayList<Email> accounts) {
         view.showProgress(true);
-        Call<MyResponse> call = model.addAcount(email);
+        List<Integer> list = new ArrayList<>();
+        for (Email email : accounts) {
+            list.add(email.getId());
+        }
+        Call<MyResponse> call = accountModel.deleteAcount(list);
         call.enqueue(new Callback<MyResponse>() {
             @Override
             public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                view.showProgress(false);
                 try {
-                    view.showProgress(false);
-                    Log.i(SignActivity.TAG,"response: " + response.code());
+                    Log.i(SignActivity.TAG, "response: " + response.code());
                     if (response.body().getCode() == 200) {
-                        view.showMessage("添加成功");
-                        GlobalInfo.ischange = true;
-                        view.finishActivity();
-                    }
-                    else {
+                        view.showMessage("删除成功");
+                        GlobalInfo.Main2ManageIschange = true;
+                        view.deleteSuccess();
+                    } else {
                         view.showMessage("抱歉，发生错误");
                     }
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     view.showMessage("抱歉，发生错误");
                 }
             }
+
             @Override
             public void onFailure(Call<MyResponse> call, Throwable t) {
                 view.showProgress(false);
@@ -66,5 +63,6 @@ public class AccountPresenter {
                 t.printStackTrace();
             }
         });
+
     }
 }

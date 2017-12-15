@@ -4,11 +4,13 @@ import com.exercise.p.emailclient.dto.MyResponse;
 import com.exercise.p.emailclient.dto.param.Email;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -29,7 +31,7 @@ public interface AccountModel {
     Call<MyResponse> updateAcounts(
             @Body Email email);
 
-    @PUT("/")
+    @POST("mail/delete")
     Call<MyResponse> deleteAcount(
-            @Body Email email);
+            @Body List<Integer> accounts);
 }

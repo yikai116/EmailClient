@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                             if (temp == SIDE_ADD_COUNT) {
                                 Intent intent = new Intent();
                                 intent.setClass(MainActivity.this, AddAccountActivity.class);
+                                intent.putExtra("code",1);
                                 startActivityForResult(intent, CODE);
                             } else if (temp == SIDE_MANAGE_COUNT) {
                                 Intent intent = new Intent();
@@ -292,10 +293,15 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(SignActivity.TAG,"result: " + requestCode + " " + resultCode + " ");
+
+        Log.i(SignActivity.TAG,"result: " + GlobalInfo.Main2ManageIschange + " " + GlobalInfo.Main2AddIschange + " " + (resultCode == RESULT_OK));
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CODE && resultCode == RESULT_OK && GlobalInfo.ischange) {
+        if (requestCode == CODE && (GlobalInfo.Main2AddIschange||GlobalInfo.Main2ManageIschange)) {
+            Log.i(SignActivity.TAG,"run onresult");
             mainPresenter.init(false);
-            GlobalInfo.ischange = false;
+            GlobalInfo.Main2AddIschange = false;
+            GlobalInfo.Main2ManageIschange = false;
         }
     }
 }

@@ -13,18 +13,22 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.dto.data.Email;
+import com.exercise.p.emailclient.presenter.ManageAccountPresenter;
 import com.exercise.p.emailclient.utils.AccountAdapter;
+import com.exercise.p.emailclient.view.ManageAccountView;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ManageAccountActivity extends AppCompatActivity {
+public class ManageAccountActivity extends AppCompatActivity implements ManageAccountView {
 
     @BindView(R.id.manage_account_toolbar)
     Toolbar manageAccountToolbar;
@@ -38,6 +42,9 @@ public class ManageAccountActivity extends AppCompatActivity {
     ActionMode actionMode;
     AccountAdapter adapter;
 
+    MaterialDialog materialDialog;
+    ManageAccountPresenter presenter;
+
     public static final int CODE = 101;
 
     @Override
@@ -47,6 +54,7 @@ public class ManageAccountActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initToolBar();
         initRecyclerView();
+        presenter = new ManageAccountPresenter(this);
     }
 
     /**
@@ -69,7 +77,8 @@ public class ManageAccountActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.action_add) {
                     Intent intent = new Intent();
                     intent.setClass(ManageAccountActivity.this, AddAccountActivity.class);
-                    startActivityForResult(intent,CODE);
+                    intent.putExtra("code",2);
+                    startActivityForResult(intent, CODE);
                 }
                 return false;
             }
@@ -85,8 +94,10 @@ public class ManageAccountActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CODE && resultCode == RESULT_OK) {
-            Log.i(SignActivity.TAG,"manage update data");
+        if (requestCode == CODE && resultCode == RESULT_OK && GlobalInfo.Manage2AddIschange) {
+            GlobalInfo.Manage2AddIschange = false;
+            GlobalInfo.Main2ManageIschange = true;
+            ManageAccountActivity.this.finish();
         }
     }
 
@@ -100,16 +111,44 @@ public class ManageAccountActivity extends AppCompatActivity {
 
     private void add2Del(View view, int position) {
         account_del.add(accounts.get(position));
-        adapter.setChoose(position,true);
+        adapter.setChoose(position, true);
         view.setBackgroundColor(getResources().getColor(R.color.colorHint));
         views.add(view);
     }
 
     private void removeFromDel(View view, int position) {
         account_del.remove(accounts.get(position));
-        adapter.setChoose(position,false);
+        adapter.setChoose(position, false);
         views.remove(view);
         view.setBackgroundColor(0);
+    }
+
+    @Override
+    public void deleteSuccess() {
+        adapter.removeAll(account_del);
+        accounts.removeAll(account_del);
+        account_del.clear();
+        views.clear();
+    }
+
+    @Override
+    public void showProgress(boolean show) {
+        if (materialDialog == null) {
+            materialDialog = new MaterialDialog.Builder(this)
+                    .title("请稍后")
+                    .content("正在提交")
+                    .progress(true, 0)
+                    .show();
+        }
+        if (show)
+            materialDialog.show();
+        else
+            materialDialog.dismiss();
+    }
+
+    @Override
+    public void showMessage(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -131,11 +170,7 @@ public class ManageAccountActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            // todo 提交
-            adapter.removeAll(account_del);
-            accounts.removeAll(account_del);
-            account_del.clear();
-            views.clear();
+            presenter.delete(account_del);
             return false;
         }
 

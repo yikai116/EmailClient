@@ -16,7 +16,7 @@ import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.databinding.ActivityAddAccountBinding;
 import com.exercise.p.emailclient.dto.param.Email;
-import com.exercise.p.emailclient.presenter.AccountPresenter;
+import com.exercise.p.emailclient.presenter.AddAccountPresenter;
 import com.exercise.p.emailclient.view.AddAccountView;
 
 
@@ -30,9 +30,8 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
     ActivityAddAccountBinding binding;
     Email email;
 
-    int code = 0;
 
-    AccountPresenter presenter;
+    AddAccountPresenter presenter;
 
     MaterialDialog materialDialog;
     @BindView(R.id.add_account_toolbar)
@@ -44,10 +43,13 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
     @BindView(R.id.add_account_button_submit)
     Button addAccountButtonSubmit;
 
+    private int code = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_account);
+        Intent intent = getIntent();
+        code = intent.getIntExtra("code",0);
         email = new Email();
         email.setSmtpServer("smtp.163.com");
         email.setSmtpPort("465");
@@ -59,7 +61,7 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
         binding.setEmail(email);
         ButterKnife.bind(this);
         initToolBar();
-        presenter = new AccountPresenter(this);
+        presenter = new AddAccountPresenter(this);
         addAccountButtonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,8 +128,19 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
             Intent intent = new Intent();
             intent.setClass(AddAccountActivity.this, MainActivity.class);
             startActivity(intent);
+            this.finish();
+            return;
         }
-        this.finish();
+        if (code == 1){
+            GlobalInfo.Main2AddIschange = true;
+            this.finish();
+            return;
+        }
+        if (code == 2){
+            GlobalInfo.Manage2AddIschange = true;
+            this.finish();
+            return;
+        }
     }
 
 
