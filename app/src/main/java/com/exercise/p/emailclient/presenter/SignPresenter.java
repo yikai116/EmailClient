@@ -2,24 +2,15 @@ package com.exercise.p.emailclient.presenter;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.exercise.p.emailclient.GlobalInfo;
-import com.exercise.p.emailclient.activity.SignActivity;
-import com.exercise.p.emailclient.activity.WelcomeActivity;
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.data.Email;
 import com.exercise.p.emailclient.dto.data.UserInfo;
 import com.exercise.p.emailclient.dto.param.User;
-import com.exercise.p.emailclient.model.AccountModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;
 import com.exercise.p.emailclient.model.SignModel;
 import com.exercise.p.emailclient.utils.FormatUtils;
 import com.exercise.p.emailclient.view.SignView;
-
-
-import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -62,17 +61,6 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
         ButterKnife.bind(this);
         initToolBar();
         presenter = new AddAccountPresenter(this);
-        addAccountButtonSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(SignActivity.TAG, "Click");
-                email.setAccount(email.getAccount().trim());
-                email.setSmtpServer(email.getSmtpServer().trim());
-                email.setPop3Server(email.getPop3Server().trim());
-                binding.setEmail(email);
-                presenter.submitAccount(email);
-            }
-        });
     }
 
     /**
@@ -95,8 +83,9 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
 
     @OnClick(R.id.add_account_button_submit)
     public void submit() {
-        Log.i(SignActivity.TAG, "Click");
         email.setAccount(email.getAccount().trim());
+        email.setSmtpServer(email.getSmtpServer().trim());
+        email.setPop3Server(email.getPop3Server().trim());
         binding.setEmail(email);
         presenter.submitAccount(email);
     }

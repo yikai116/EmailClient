@@ -1,6 +1,9 @@
 package com.exercise.p.emailclient.presenter;
 
+import android.util.Log;
+
 import com.exercise.p.emailclient.GlobalInfo;
+import com.exercise.p.emailclient.activity.SignActivity;
 import com.exercise.p.emailclient.dto.MyResponse;
 import com.exercise.p.emailclient.dto.data.Email;
 import com.exercise.p.emailclient.model.AccountModel;
@@ -8,6 +11,7 @@ import com.exercise.p.emailclient.model.RetrofitInstance;
 import com.exercise.p.emailclient.view.MainView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,18 +41,7 @@ public class MainPresenter {
                     if (myResponse.getCode() == 200) {
                         GlobalInfo.accounts.clear();
                         GlobalInfo.accounts.addAll(myResponse.getData());
-                        if (GlobalInfo.accounts.size() == 0) {
-                            view.toAddAccountActivity();
-                        } else {
-                            GlobalInfo.currentEmail = GlobalInfo.accounts.get(0);
-                            view.updateDrawer();
-                            if (changeAccount) {
-                                // todo
-                                view.showProgress(false);
-                            } else {
-                                view.showProgress(false);
-                            }
-                        }
+                        view.updateDrawer();
                     }
                 }
             }
@@ -57,6 +50,38 @@ public class MainPresenter {
             public void onFailure(Call<MyResponse<ArrayList<Email>>> call, Throwable t) {
                 t.printStackTrace();
                 view.showMessage("网络连接错误");
+            }
+        });
+    }
+
+    public void delete(int id) {
+        view.showProgress(true);
+        List<Integer> list = new ArrayList<>();
+        list.add(id);
+        Call<MyResponse> call = accountModel.deleteAcount(list);
+        call.enqueue(new Callback<MyResponse>() {
+            @Override
+            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                view.showProgress(false);
+                try {
+                    Log.i(SignActivity.TAG, "delete server response: " + response.code());
+                    if (response.body().getCode() == 200) {
+                        view.showMessage("删除成功");
+                        view.updateDrawer();
+                    } else {
+                        view.showMessage("抱歉，发生错误");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    view.showMessage("抱歉，发生错误");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse> call, Throwable t) {
+                view.showProgress(false);
+                view.showMessage("网络错误，请稍后再试");
+                t.printStackTrace();
             }
         });
     }

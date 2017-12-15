@@ -44,7 +44,7 @@ public class AddAccountPresenter {
             public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                 try {
                     view.showProgress(false);
-                    Log.i(SignActivity.TAG,"response: " + response.code());
+                    Log.i(SignActivity.TAG,"submit account server response: " + response.code());
                     if (response.body().getCode() == 200) {
                         view.showMessage("添加成功");
                         view.finishActivity();

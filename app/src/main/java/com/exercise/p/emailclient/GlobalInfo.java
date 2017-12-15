@@ -13,7 +13,6 @@ public class GlobalInfo {
     public static UserInfo user = null;
     public static String authorization = "";
     public static ArrayList<Email> accounts = new ArrayList<>();
-    public static Email currentEmail = null;
     public static boolean Main2AddIschange = false;
     public static boolean Manage2AddIschange = false;
     public static boolean Main2ManageIschange = false;

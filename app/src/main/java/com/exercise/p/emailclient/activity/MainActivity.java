@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private static final int SIDE_ADD_COUNT = 8;
     private static final int SIDE_MANAGE_COUNT = 9;
 
-    private static int EMAIL_COUNT = 100;
     @BindView(R.id.main_recycler_view)
     RecyclerView mainRecyclerView;
 
@@ -77,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             //加载actions
             actionMode = mode;
-            Log.i(SignActivity.TAG, "mode create mode: " + mode + " actionMode:" + actionMode);
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.menu_action, menu);
             actionMode.setTitle("123");
@@ -86,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            Log.i(SignActivity.TAG, "mode prepare");
             return false;
         }
 
@@ -146,17 +143,15 @@ public class MainActivity extends AppCompatActivity implements MainView {
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.color.primary)
-                .addProfiles(
-                        new ProfileSettingDrawerItem().withName("添加账号")
-                                .withIcon(R.drawable.icon_side_add_account)
-                                .withIdentifier(SIDE_ADD_COUNT),
-                        new ProfileSettingDrawerItem().withName("管理账号")
-                                .withIcon(R.drawable.icon_side_manage_account)
-                                .withIdentifier(SIDE_MANAGE_COUNT)
-                )
-                .withCurrentProfileHiddenInList(true)
                 .withOnlyMainProfileImageVisible(true)
                 .withProfileImagesClickable(false)
+                .withOnAccountHeaderItemLongClickListener(new AccountHeader.OnAccountHeaderItemLongClickListener() {
+                    @Override
+                    public boolean onProfileLongClick(View view, IProfile profile, boolean current) {
+                        mainPresenter.delete((int) profile.getIdentifier());
+                        return false;
+                    }
+                })
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
@@ -165,12 +160,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
                             if (temp == SIDE_ADD_COUNT) {
                                 Intent intent = new Intent();
                                 intent.setClass(MainActivity.this, AddAccountActivity.class);
-                                intent.putExtra("code",1);
+                                intent.putExtra("code", 1);
                                 startActivityForResult(intent, CODE);
-                            } else if (temp == SIDE_MANAGE_COUNT) {
-                                Intent intent = new Intent();
-                                intent.setClass(MainActivity.this, ManageAccountActivity.class);
-                                startActivityForResult(intent, CODE);
+//                            } else if (temp == SIDE_MANAGE_COUNT) {
+//                                Intent intent = new Intent();
+//                                intent.setClass(MainActivity.this, ManageAccountActivity.class);
+//                                startActivityForResult(intent, CODE);
                             }
                         }
                         return true;
@@ -220,12 +215,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
                                 Log.i(SignActivity.TAG, "click 5 " + ((PrimaryDrawerItem) drawerItem).getName().toString());
                                 break;
                             case SIDE_SETTING:
-                                Log.i(SignActivity.TAG, "click 6 " + ((PrimaryDrawerItem) drawerItem).getName().toString());
                                 temp = side_select;
                                 result.setSelection(side_select, false);
                                 break;
                             case SIDE_FEEDBACK:
-                                Log.i(SignActivity.TAG, "click 7 " + ((PrimaryDrawerItem) drawerItem).getName().toString());
                                 temp = side_select;
                                 result.setSelection(side_select, false);
                                 Intent intent = new Intent();
@@ -244,21 +237,23 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void updateDrawer() {
-        headerResult.addProfile(
-                new ProfileDrawerItem().withName(GlobalInfo.currentEmail.getAlias())
-                        .withEmail(GlobalInfo.currentEmail.getAccount())
-                        .withIcon(R.drawable.icon_side_avatar)
-                        .withIdentifier(EMAIL_COUNT), 0);
-        EMAIL_COUNT++;
+        headerResult.clear();
+        if (GlobalInfo.accounts.size() == 0) {
+            toAddAccountActivity();
+            return;
+        }
+        headerResult.addProfiles(
+                new ProfileSettingDrawerItem().withName("添加账号")
+                        .withIcon(R.drawable.icon_side_add_account)
+                        .withIdentifier(SIDE_ADD_COUNT)
+        );
         for (int i = 0; i < GlobalInfo.accounts.size(); i++) {
             Email email = GlobalInfo.accounts.get(i);
-            if (!email.equals(GlobalInfo.currentEmail)) {
-                headerResult.addProfile(new ProfileDrawerItem().withName(GlobalInfo.user.getUserName())
-                        .withEmail(email.getAccount())
-                        .withIcon(R.drawable.icon_side_avatar)
-                        .withIdentifier(EMAIL_COUNT), 0);
-                EMAIL_COUNT++;
-            }
+            headerResult.addProfile(new ProfileDrawerItem().withName(GlobalInfo.user.getUserName())
+                    .withEmail(email.getAccount())
+                    .withIcon(R.drawable.icon_side_avatar)
+                    .withIdentifier(email.getId()), 0);
+
         }
     }
 
@@ -293,12 +288,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(SignActivity.TAG,"result: " + requestCode + " " + resultCode + " ");
-
-        Log.i(SignActivity.TAG,"result: " + GlobalInfo.Main2ManageIschange + " " + GlobalInfo.Main2AddIschange + " " + (resultCode == RESULT_OK));
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CODE && (GlobalInfo.Main2AddIschange||GlobalInfo.Main2ManageIschange)) {
-            Log.i(SignActivity.TAG,"run onresult");
+        if (requestCode == CODE && (GlobalInfo.Main2AddIschange || GlobalInfo.Main2ManageIschange)) {
             mainPresenter.init(false);
             GlobalInfo.Main2AddIschange = false;
             GlobalInfo.Main2ManageIschange = false;
