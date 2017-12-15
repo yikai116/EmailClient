@@ -11,9 +11,16 @@
         <item name="android:padding">10dp</item>
     </style>
 
-    <style name="SideText">
+    <style name="Text">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/colorDeepText</item>
+    </style>
+
+    <style name="SideText" parent="Text">
+    </style>
+
+    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>

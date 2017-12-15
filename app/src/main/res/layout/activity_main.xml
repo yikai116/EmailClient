@@ -5,7 +5,7 @@
     android:id="@+id/main_drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.exercise.p.citicup.activity.MainActivity">
+    tools:context="com.exercise.p.emailclient.activity.MainActivity">
     <!--//主布局内容-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,13 +17,19 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="?colorPrimary"
-            android:translationZ="2dp"/>
+            android:translationZ="2dp"
+            app:titleTextAppearance="@style/ToolbarTitle"/>
         <FrameLayout
             android:id="@+id/main_pager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center" >
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/main_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
     </LinearLayout>
     <!--//侧边栏布局内容-->
     <!--<android.support.design.widget.NavigationView-->
@@ -33,5 +39,5 @@
         <!--android:layout_height="match_parent"-->
         <!--app:itemTextAppearance="@style/SideText"-->
         <!--app:headerLayout="@layout/layout_side_header"-->
-        <!--app:menu="@menu/menu_side" />-->
+        <!--app:menu="@mmenu_actionside" />-->
 </android.support.v4.widget.DrawerLayout>

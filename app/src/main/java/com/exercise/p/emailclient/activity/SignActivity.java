@@ -1,6 +1,7 @@
 package com.exercise.p.emailclient.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -15,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.databinding.ActivitySignBinding;
 import com.exercise.p.emailclient.dto.param.User;
@@ -48,20 +51,10 @@ public class SignActivity extends AppCompatActivity implements SignView {
     @BindView(R.id.sign_root)
     LinearLayout signRoot;
 
-    Timer timer = null;
-    TimerTask task = null;
-
     SignPresenter presenter;
     User user;
 
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            String[] strs = {"正在登录", "正在登录.", "正在登录..", "正在登录..."};
-            signButtonSignIn.setText(strs[msg.what]);
-            return false;
-        }
-    });
+    MaterialDialog materialDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +72,10 @@ public class SignActivity extends AppCompatActivity implements SignView {
     }
 
     @OnClick(R.id.sign_button_reget_code)
-    public void initCheckCode(){
+    public void initCheckCode() {
         presenter.getCheckImg();
     }
+
     /**
      * 控制键盘布局
      *
@@ -110,7 +104,7 @@ public class SignActivity extends AppCompatActivity implements SignView {
     }
 
     @OnClick(R.id.sign_button_sign_in)
-    public void signIn(){
+    public void signIn() {
         user.setEmail(user.getEmail().trim());
         user.setCheckCode(user.getCheckCode().trim());
         binding.setUser(user);
@@ -124,36 +118,35 @@ public class SignActivity extends AppCompatActivity implements SignView {
 
     @Override
     public void toMainActivity() {
+        SharedPreferences preferences = getSharedPreferences("Info", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("token", GlobalInfo.user.getAccessToken());
+        editor.apply();
         Intent intent = new Intent();
-        intent.setClass(SignActivity.this, MainActivity.class);
+        if (GlobalInfo.accounts.size() == 0) {
+            intent.setClass(SignActivity.this, AddAccountActivity.class);
+        } else {
+            intent.setClass(SignActivity.this, MainActivity.class);
+        }
         startActivity(intent);
         SignActivity.this.supportFinishAfterTransition();
     }
 
     @Override
     public void showProgress(boolean show) {
-        signButtonSignIn.setText("登录");
-        signButtonSignIn.setClickable(!show);
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
+        if (materialDialog == null) {
+            materialDialog = new MaterialDialog.Builder(this)
+                    .title("请稍后")
+                    .content("正在提交")
+                    .progress(true, 0)
+                    .show();
         }
-        if (task != null) {
-            task.cancel();
-            task = null;
-        }
-        if (show) {
-            timer = new Timer();
-            task = new TimerTask() {
-                int i = 0;
-                @Override
-                public void run() {
-                    handler.sendEmptyMessage(i % 4);
-                    i++;
-                }
-            };
-            timer.schedule(task, 0, 500);
-        }
+
+        if (show)
+            materialDialog.show();
+        else
+            materialDialog.dismiss();
+
     }
 
     @Override

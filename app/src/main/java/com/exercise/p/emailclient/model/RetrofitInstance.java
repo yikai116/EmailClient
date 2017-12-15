@@ -48,7 +48,9 @@ public class RetrofitInstance {
                         public Response intercept(Chain chain) throws IOException {
                             Request request = chain.request();
                             Request.Builder builder1 = request.newBuilder();
-                            Request newRequest = builder1.addHeader("Authorization", GlobalInfo.authorization).build();
+                            Request newRequest = builder1
+                                    .addHeader("Authorization",  GlobalInfo.authorization)
+                                    .addHeader("Content-Type","application/json").build();
                             return chain.proceed(newRequest);
                         }
                     })
@@ -64,5 +66,9 @@ public class RetrofitInstance {
                     .build();
         }
         return retrofitWithToken;
+    }
+
+    public static void setRetrofitWithTokenToNull(){
+        retrofitWithToken = null;
     }
 }

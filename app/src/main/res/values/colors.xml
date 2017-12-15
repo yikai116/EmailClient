@@ -7,4 +7,6 @@
     <color name="colorTheme">@color/colorPrimary</color>
     <color name="colorHint">#bbccd0</color>
     <color name="colorDeepText">#424242</color>
+    <color name="colorActionModeBackground">#009688</color>
+    <color name="colorActionModeBackgroundDark">#06786d</color>
 </resources>

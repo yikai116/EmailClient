@@ -1,7 +1,7 @@
 package com.exercise.p.emailclient.model;
 
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.data.Sign;
+import com.exercise.p.emailclient.dto.data.UserInfo;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -17,5 +17,5 @@ public interface WelcomeModel {
      * @return 返回结果信息
      */
     @GET("user/auth")
-    Call<MyResponse<Sign>> verToken();
+    Call<MyResponse<UserInfo>> verToken();
 }

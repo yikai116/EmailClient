@@ -4,7 +4,7 @@ package com.exercise.p.emailclient.dto.data;
  * Created by p on 2017/12/5.
  */
 
-public class Sign {
+public class UserInfo {
     /**
      * userName : Email
      * email : 1234567890@qq.com

@@ -3,16 +3,23 @@ package com.exercise.p.emailclient.presenter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.activity.SignActivity;
+import com.exercise.p.emailclient.activity.WelcomeActivity;
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.data.Sign;
+import com.exercise.p.emailclient.dto.data.Email;
+import com.exercise.p.emailclient.dto.data.UserInfo;
 import com.exercise.p.emailclient.dto.param.User;
+import com.exercise.p.emailclient.model.AccountModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;
 import com.exercise.p.emailclient.model.SignModel;
+import com.exercise.p.emailclient.utils.FormatUtils;
 import com.exercise.p.emailclient.view.SignView;
 
+
+import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -24,18 +31,18 @@ import retrofit2.Response;
  */
 
 public class SignPresenter {
-    private SignModel model;
+    private SignModel signModel;
     private SignView view;
 
     private String cookie = null;
 
     public SignPresenter(SignView view) {
-        model = RetrofitInstance.getRetrofit().create(SignModel.class);
+        signModel = RetrofitInstance.getRetrofit().create(SignModel.class);
         this.view = view;
     }
 
     public void sign(User user) {
-        if (!emailFormat(user.getEmail())) {
+        if (!FormatUtils.emailFormat(user.getEmail())) {
             view.showMessage("邮箱格式错误");
             return;
         }
@@ -48,21 +55,23 @@ public class SignPresenter {
             return;
         }
         view.showProgress(true);
-        Call<MyResponse<Sign>> call = model.signIn(user, cookie);
-        call.enqueue(new Callback<MyResponse<Sign>>() {
+        Call<MyResponse<UserInfo>> call = signModel.signIn(user, cookie);
+        call.enqueue(new Callback<MyResponse<UserInfo>>() {
             @Override
-            public void onResponse(Call<MyResponse<Sign>> call, Response<MyResponse<Sign>> response) {
+            public void onResponse(Call<MyResponse<UserInfo>> call, Response<MyResponse<UserInfo>> response) {
                 view.showProgress(false);
-                MyResponse<Sign> myResponse = response.body();
+                MyResponse<UserInfo> myResponse = response.body();
                 if (myResponse.getCode() != 200) {
                     view.showMessage(myResponse.getMessage());
                 } else {
                     GlobalInfo.user = myResponse.getData();
+                    GlobalInfo.authorization = "Bearer " + GlobalInfo.user.getAccessToken();
                     view.toMainActivity();
                 }
             }
+
             @Override
-            public void onFailure(Call<MyResponse<Sign>> call, Throwable t) {
+            public void onFailure(Call<MyResponse<UserInfo>> call, Throwable t) {
                 view.showProgress(false);
                 view.showMessage("网络错误，请稍后再试");
                 t.printStackTrace();
@@ -71,7 +80,7 @@ public class SignPresenter {
     }
 
     public void getCheckImg() {
-        Call<ResponseBody> call = model.getCheckImg(String.valueOf(Math.random()));
+        Call<ResponseBody> call = signModel.getCheckImg(String.valueOf(Math.random()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -87,10 +96,4 @@ public class SignPresenter {
             }
         });
     }
-
-    private boolean emailFormat(String email) {
-        String regex = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
-        return email.matches(regex);
-    }
-
 }

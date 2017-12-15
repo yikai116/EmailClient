@@ -13,22 +13,26 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.WelcomeActivity"
-            android:theme="@style/FullScreen"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SignActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.MainActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.FeedbackActivity"
-            android:screenOrientation="portrait"/>
-
+        <activity
+            android:name=".activity.SignActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.FeedbackActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.AddAccountActivity" />
+        <activity android:name=".activity.ManageAccountActivity"></activity>
     </application>
 
 </manifest>

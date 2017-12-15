@@ -1,8 +1,7 @@
 package com.exercise.p.emailclient.model;
 
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.data.Sign;
-import com.exercise.p.emailclient.dto.param.User;
+import com.exercise.p.emailclient.dto.data.UserInfo;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -23,8 +22,8 @@ public interface SignModel {
      * @return 返回结果信息
      */
     @POST("user/auth")
-    Call<MyResponse<Sign>> signIn(
-            @Body User user,
+    Call<MyResponse<UserInfo>> signIn(
+            @Body com.exercise.p.emailclient.dto.param.User user,
             @Header("Cookie") String cookie
     );
 

@@ -3,18 +3,24 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="windowActionModeOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!--允许动画-->
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentTransitions">true</item>
+        <!--设置popupWindow字体颜色-->
+        <item name="android:textColor">@android:color/black</item>
         <!--设置title颜色-->
         <item name="android:textColorPrimary">@android:color/white</item>
         <!--设置navigationIcon颜色-->
         <item name="colorControlNormal">@android:color/white</item>
+
+        <item name="android:actionModeBackground">@color/colorActionModeBackground</item>
     </style>
     <style name="FullScreen" parent="AppTheme">
         <item name="android:windowFullscreen">true</item>
     </style>
-
 </resources>

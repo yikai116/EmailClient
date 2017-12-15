@@ -5,18 +5,24 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.data.Sign;
+import com.exercise.p.emailclient.dto.data.Email;
+import com.exercise.p.emailclient.dto.data.UserInfo;
+import com.exercise.p.emailclient.model.AccountModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;
 import com.exercise.p.emailclient.model.WelcomeModel;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,11 +32,11 @@ public class WelcomeActivity extends AppCompatActivity {
     @BindView(R.id.wel_logo)
     ImageView welLogo;
     private boolean tag = false;
+    public static final int FIRST = 100;
     private Handler handler = new Handler();
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-//            tag = true;
             Intent intent = new Intent();
             if (tag) {
                 intent.setClass(WelcomeActivity.this, MainActivity.class);
@@ -51,15 +57,22 @@ public class WelcomeActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("Info", MODE_PRIVATE);
         String token = preferences.getString("token", "");
         GlobalInfo.authorization = "Bearer " + token;
+        assert GlobalInfo.authorization != null;
+        Log.i(SignActivity.TAG, "Welcome GlobalInfo.authorization: " + GlobalInfo.authorization);
+        authToken();
+    }
+
+    private void authToken() {
         WelcomeModel model = RetrofitInstance.getRetrofitWithToken().create(WelcomeModel.class);
-        Call<MyResponse<Sign>> call = model.verToken();
-        call.enqueue(new Callback<MyResponse<Sign>>() {
+        Call<MyResponse<UserInfo>> call = model.verToken();
+        call.enqueue(new Callback<MyResponse<UserInfo>>() {
             @Override
-            public void onResponse(Call<MyResponse<Sign>> call, Response<MyResponse<Sign>> response) {
-                MyResponse<Sign> myResponse = response.body();
+            public void onResponse(Call<MyResponse<UserInfo>> call, Response<MyResponse<UserInfo>> response) {
+                MyResponse<UserInfo> myResponse = response.body();
                 if ((myResponse != null)) {
                     if (myResponse.getCode() != 200) {
                         Toast.makeText(WelcomeActivity.this, myResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        RetrofitInstance.setRetrofitWithTokenToNull();
                         tag = false;
                     } else {
                         GlobalInfo.user = myResponse.getData();
@@ -70,7 +83,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<MyResponse<Sign>> call, Throwable t) {
+            public void onFailure(Call<MyResponse<UserInfo>> call, Throwable t) {
                 t.printStackTrace();
                 Toast.makeText(WelcomeActivity.this, "网络错误，请稍后再试", Toast.LENGTH_SHORT).show();
                 tag = false;

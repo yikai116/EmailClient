@@ -6,4 +6,5 @@
     <string name="signIn">登录</string>
     <string name="checkCodeHint">验证码</string>
     <string name="regetCode">重新获取</string>
+    <string name="addAccount">添加</string>
 </resources>
