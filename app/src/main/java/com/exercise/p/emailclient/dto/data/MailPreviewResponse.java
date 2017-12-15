@@ -1,24 +1,26 @@
 package com.exercise.p.emailclient.dto.data;
 
-import java.util.Date;
+import com.google.gson.Gson;
 
 public class MailPreviewResponse {
     private Integer id;
 
+    // 主题
     private String subject;
 
     private String from;
 
+    // 纯文本 有可能其中一个为null
     private String textBody;
 
+    // html
     private String htmlBody;
 
     private String to;
 
     private String contentType;
 
-    private Date sendDate;
-
+    private long sendDate;
 
     public Integer getId() {
         return id;
@@ -76,13 +78,19 @@ public class MailPreviewResponse {
         this.contentType = contentType;
     }
 
-    public Date getSendDate() {
+    public long getSendDate() {
         return sendDate;
     }
 
-    public void setSendDate(Date sendDate) {
+    public void setSendDate(long sendDate) {
         this.sendDate = sendDate;
     }
 
 
+    @Override
+    public String toString() {
+        this.setTextBody("text");
+        this.setHtmlBody("html");
+        return new Gson().toJson(this);
+    }
 }

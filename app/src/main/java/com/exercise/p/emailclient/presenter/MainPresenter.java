@@ -7,6 +7,7 @@ import com.exercise.p.emailclient.activity.SignActivity;
 import com.exercise.p.emailclient.dto.MyResponse;
 import com.exercise.p.emailclient.dto.data.Email;
 import com.exercise.p.emailclient.dto.data.FolderResponse;
+import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
 import com.exercise.p.emailclient.model.AccountModel;
 import com.exercise.p.emailclient.model.EmailModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;
@@ -98,25 +99,24 @@ public class MainPresenter {
         });
     }
 
-    public void getEmail(int id) {
-        Log.i(SignActivity.TAG,"get Folder id :" + id);
+    public void getEmail(int id, final String boxType) {
         view.showProgress(true);
         Call<MyResponse<List<FolderResponse>>> accountCall = emailModel.getFolder(id);
         accountCall.enqueue(new Callback<MyResponse<List<FolderResponse>>>() {
             @Override
             public void onResponse(Call<MyResponse<List<FolderResponse>>> call, Response<MyResponse<List<FolderResponse>>> response) {
                 view.showProgress(false);
-                Log.i(SignActivity.TAG,"get Folder server code :" + response.code());
+                Log.i(SignActivity.TAG, "get Folder server code :" + response.code());
                 MyResponse<List<FolderResponse>> myResponse = response.body();
                 if ((myResponse != null)) {
                     if (myResponse.getCode() == 200) {
-                        Log.i(SignActivity.TAG,"get Folder");
-                    }else {
-                        Log.i(SignActivity.TAG,"get Folder code :" + myResponse.getCode());
+                        GlobalInfo.allMail = myResponse.getData();
+                        view.setData(GlobalInfo.getMailsByBox(boxType));
+                    } else {
+                        view.showMessage("抱歉，发生错误");
                     }
-                }
-                else {
-                    Log.i(SignActivity.TAG,"get Folder null");
+                } else {
+                    view.showMessage("抱歉，发生错误");
                 }
             }
 
