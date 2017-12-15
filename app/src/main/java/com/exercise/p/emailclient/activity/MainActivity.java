@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private static final int SIDE_FEEDBACK = 7;
 
     private static final int SIDE_ADD_COUNT = 8;
-    private static final int SIDE_MANAGE_COUNT = 9;
 
     @BindView(R.id.main_recycler_view)
     RecyclerView mainRecyclerView;
@@ -70,7 +69,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
     ActionMode actionMode = null;
 
     MainPresenter mainPresenter;
+
+    // 提示框
     MaterialDialog materialDialog;
+
+    int activeId = 0;
+
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -128,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         mainPresenter = new MainPresenter(this);
         initToolBar();
         initDrawer();
-        mainPresenter.init(true);
+        mainPresenter.getAccounts();
     }
 
     private void initToolBar() {
@@ -162,10 +166,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
                                 intent.setClass(MainActivity.this, AddAccountActivity.class);
                                 intent.putExtra("code", 1);
                                 startActivityForResult(intent, CODE);
-//                            } else if (temp == SIDE_MANAGE_COUNT) {
-//                                Intent intent = new Intent();
-//                                intent.setClass(MainActivity.this, ManageAccountActivity.class);
-//                                startActivityForResult(intent, CODE);
                             }
                         }
                         return true;
@@ -237,6 +237,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public void updateDrawer() {
+        Log.i(SignActivity.TAG,"update Drawer");
+        if (headerResult.getActiveProfile() != null){
+            activeId = (int) headerResult.getActiveProfile().getIdentifier();
+        }
+        Log.i(SignActivity.TAG,"activeId--1: " + activeId);
         headerResult.clear();
         if (GlobalInfo.accounts.size() == 0) {
             toAddAccountActivity();
@@ -253,7 +258,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     .withEmail(email.getAccount())
                     .withIcon(R.drawable.icon_side_avatar)
                     .withIdentifier(email.getId()), 0);
+        }
 
+        if (headerResult.getActiveProfile().getIdentifier() != activeId){
+            // 更新邮箱数据
+            activeId = (int) headerResult.getActiveProfile().getIdentifier();
+            Log.i(SignActivity.TAG,"activeId--2: " + activeId);
+            mainPresenter.getEmail(activeId);
         }
     }
 
@@ -290,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CODE && (GlobalInfo.Main2AddIschange || GlobalInfo.Main2ManageIschange)) {
-            mainPresenter.init(false);
+            mainPresenter.getAccounts();
             GlobalInfo.Main2AddIschange = false;
             GlobalInfo.Main2ManageIschange = false;
         }

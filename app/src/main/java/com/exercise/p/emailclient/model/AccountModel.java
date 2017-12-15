@@ -14,6 +14,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 /**
  * Created by p on 2017/12/13.
@@ -25,10 +26,11 @@ public interface AccountModel {
             @Body Email email);
 
     @GET("mail/")
-    Call<MyResponse<ArrayList<com.exercise.p.emailclient.dto.data.Email>>> getAcounts();
+    Call<MyResponse<ArrayList<com.exercise.p.emailclient.dto.data.Email>>> getAccounts();
 
-    @PUT("/")
+    @POST("mail/{boxId}")
     Call<MyResponse> updateAcounts(
+            @Path("boxId") int boxId,
             @Body Email email);
 
     @POST("mail/delete")
