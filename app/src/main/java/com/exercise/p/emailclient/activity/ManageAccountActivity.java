@@ -8,7 +8,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,7 +33,7 @@ public class ManageAccountActivity extends AppCompatActivity implements ManageAc
     Toolbar manageAccountToolbar;
     @BindView(R.id.manage_account_recycler_view)
     RecyclerView manageAccountRecyclerView;
-    ArrayList<Email> accounts = GlobalInfo.accounts;
+    ArrayList<Email> accounts = GlobalInfo.emails;
 
     ArrayList<Email> account_del = new ArrayList<>();
     ArrayList<View> views = new ArrayList<>();
@@ -70,7 +69,6 @@ public class ManageAccountActivity extends AppCompatActivity implements ManageAc
             }
         });
         assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         manageAccountToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -94,9 +92,9 @@ public class ManageAccountActivity extends AppCompatActivity implements ManageAc
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CODE && resultCode == RESULT_OK && GlobalInfo.Manage2AddIschange) {
-            GlobalInfo.Manage2AddIschange = false;
-            GlobalInfo.Main2ManageIschange = true;
+        if (requestCode == CODE && resultCode == RESULT_OK && GlobalInfo.Manage2AddIsChange) {
+            GlobalInfo.Manage2AddIsChange = false;
+            GlobalInfo.Main2ManageIsChange = true;
             ManageAccountActivity.this.finish();
         }
     }
@@ -112,7 +110,7 @@ public class ManageAccountActivity extends AppCompatActivity implements ManageAc
     private void add2Del(View view, int position) {
         account_del.add(accounts.get(position));
         adapter.setChoose(position, true);
-        view.setBackgroundColor(getResources().getColor(R.color.colorHint));
+        view.setBackgroundColor(getResources().getColor(R.color.colorSelected));
         views.add(view);
     }
 

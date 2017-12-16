@@ -50,12 +50,12 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
         Intent intent = getIntent();
         code = intent.getIntExtra("code",0);
         email = new Email();
-        email.setSmtpServer("smtp.163.com");
-        email.setSmtpPort("465");
-        email.setPop3Server("pop.163.com");
-        email.setPop3Port("995");
-        email.setAccount("15196673448@163.com");
-        email.setPassword("yk123456");
+//        email.setSmtpServer("smtp.163.com");
+//        email.setSmtpPort("465");
+//        email.setPop3Server("pop.163.com");
+//        email.setPop3Port("995");
+//        email.setAccount("15196673448@163.com");
+//        email.setPassword("yk123456");
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_account);
         binding.setEmail(email);
         ButterKnife.bind(this);
@@ -68,7 +68,7 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
      */
     private void initToolBar() {
         setSupportActionBar(addAccountToolbar);
-        if (GlobalInfo.accounts.size() != 0) {
+        if (GlobalInfo.emails.size() != 0) {
             addAccountToolbar.setNavigationIcon(R.drawable.icon_back);
             addAccountToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -78,7 +78,6 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
             });
         }
         assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @OnClick(R.id.add_account_button_submit)
@@ -113,7 +112,7 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
 
     @Override
     public void finishActivity() {
-        if (GlobalInfo.accounts.size() == 0) {
+        if (GlobalInfo.emails.size() == 0) {
             Intent intent = new Intent();
             intent.setClass(AddAccountActivity.this, MainActivity.class);
             startActivity(intent);
@@ -121,12 +120,12 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
             return;
         }
         if (code == 1){
-            GlobalInfo.Main2AddIschange = true;
+            GlobalInfo.Main2AddIsChange = true;
             this.finish();
             return;
         }
         if (code == 2){
-            GlobalInfo.Manage2AddIschange = true;
+            GlobalInfo.Manage2AddIsChange = true;
             this.finish();
             return;
         }

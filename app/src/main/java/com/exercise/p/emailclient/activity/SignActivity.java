@@ -6,8 +6,6 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -23,9 +21,6 @@ import com.exercise.p.emailclient.databinding.ActivitySignBinding;
 import com.exercise.p.emailclient.dto.param.User;
 import com.exercise.p.emailclient.presenter.SignPresenter;
 import com.exercise.p.emailclient.view.SignView;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -123,7 +118,7 @@ public class SignActivity extends AppCompatActivity implements SignView {
         editor.putString("token", GlobalInfo.user.getAccessToken());
         editor.apply();
         Intent intent = new Intent();
-        if (GlobalInfo.accounts.size() == 0) {
+        if (GlobalInfo.emails.size() == 0) {
             intent.setClass(SignActivity.this, AddAccountActivity.class);
         } else {
             intent.setClass(SignActivity.this, MainActivity.class);

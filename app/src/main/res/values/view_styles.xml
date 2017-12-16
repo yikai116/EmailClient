@@ -19,8 +19,5 @@
     <style name="SideText" parent="Text">
     </style>
 
-    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">18sp</item>
-    </style>
 
 </resources>

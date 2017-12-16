@@ -3,6 +3,17 @@ package com.exercise.p.emailclient.dto.data;
 import com.google.gson.Gson;
 
 public class MailPreviewResponse {
+    /**
+     * contentType : multipart/alternative; boundary="001a11498fd0a17be205605ec148"
+     * from : 毛昌越 <scumchy@gmail.com>,
+     * htmlBody : html
+     * id : 43098
+     * sendDate : 1513334934000
+     * subject : TESTTESTETST
+     * textBody : text
+     * to : null <15196673448@163.com>,
+     */
+
     private Integer id;
 
     // 主题

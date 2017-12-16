@@ -5,52 +5,52 @@ import android.util.Log;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.activity.SignActivity;
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.data.Email;
-import com.exercise.p.emailclient.model.AccountModel;
+import com.exercise.p.emailclient.dto.data.UserInfo;
+import com.exercise.p.emailclient.dto.param.Mail;
+import com.exercise.p.emailclient.model.EmailModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;
-import com.exercise.p.emailclient.view.ManageAccountView;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.exercise.p.emailclient.utils.FormatUtils;
+import com.exercise.p.emailclient.view.SendView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by p on 2017/12/15.
+ * Created by p on 2017/12/16.
  */
 
-public class ManageAccountPresenter {
-    private AccountModel accountModel;
-    private ManageAccountView view;
+public class SendPresenter {
+    EmailModel model;
+    SendView view;
 
-    public ManageAccountPresenter(ManageAccountView view) {
+    public SendPresenter(SendView view) {
         this.view = view;
-        accountModel = RetrofitInstance.getRetrofitWithToken().create(AccountModel.class);
+        this.model = RetrofitInstance.getRetrofitWithToken().create(EmailModel.class);
     }
 
-    public void delete(ArrayList<Email> accounts) {
+    public void send(Mail mail){
         view.showProgress(true);
-        List<Integer> list = new ArrayList<>();
-        for (Email email : accounts) {
-            list.add(email.getId());
+        if (!FormatUtils.emailFormat(mail.getTo())) {
+            view.showMessage("邮箱格式错误");
+            return;
         }
-        Call<MyResponse> call = accountModel.deleteAcount(list);
+        Call<MyResponse> call = model.sendEmail(GlobalInfo.activeId,mail);
         call.enqueue(new Callback<MyResponse>() {
             @Override
             public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                view.showProgress(false);
                 try {
-                    Log.i(SignActivity.TAG, "response: " + response.code());
+                    view.showProgress(false);
+                    Log.i(SignActivity.TAG,"submit email server response: " + response.code());
                     if (response.body().getCode() == 200) {
-                        view.showMessage("删除成功");
-                        GlobalInfo.Main2ManageIsChange = true;
-                        view.deleteSuccess();
-                    } else {
+                        view.showMessage("发送成功");
+                        view.finishActivity();
+                    }
+                    else {
                         view.showMessage("抱歉，发生错误");
                     }
-                } catch (Exception e) {
+                }
+                catch (Exception e){
                     e.printStackTrace();
                     view.showMessage("抱歉，发生错误");
                 }
@@ -63,6 +63,5 @@ public class ManageAccountPresenter {
                 t.printStackTrace();
             }
         });
-
     }
 }

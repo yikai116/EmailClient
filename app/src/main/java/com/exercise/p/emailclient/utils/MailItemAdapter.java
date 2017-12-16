@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.exercise.p.emailclient.R;
@@ -28,12 +29,12 @@ public class MailItemAdapter extends RecyclerView.Adapter<MailItemAdapter.MyView
         mails = data;
         this.context = context;
         isChoose = new ArrayList<>();
-        for (int i = 0; i< data.size();i++){
+        for (int i = 0; i < data.size(); i++) {
             isChoose.add(false);
         }
     }
 
-    public void addAccount(MailPreviewResponse email){
+    public void addAccount(MailPreviewResponse email) {
         this.mails.add(email);
         this.isChoose.add(false);
     }
@@ -46,13 +47,13 @@ public class MailItemAdapter extends RecyclerView.Adapter<MailItemAdapter.MyView
         }
     }
 
-    public void setChoose(int position,boolean choose){
-        isChoose.set(position,choose);
+    public void setChoose(int position, boolean choose) {
+        isChoose.set(position, choose);
     }
 
-    public void setAllChoose(boolean choose){
+    public void setAllChoose(boolean choose) {
         isChoose = new ArrayList<>();
-        for (int i = 0; i< mails.size(); i++){
+        for (int i = 0; i < mails.size(); i++) {
             isChoose.add(choose);
         }
     }
@@ -68,11 +69,23 @@ public class MailItemAdapter extends RecyclerView.Adapter<MailItemAdapter.MyView
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         MailPreviewResponse mail = mails.get(position);
-        Log.i(SignActivity.TAG,"bind " + position + " " + isChoose.get(position));
-        holder.fromText.setText(mail.getFrom());
+        Log.i(SignActivity.TAG, "bind " + position + " " + isChoose.get(position));
+        if (isChoose.get(position)) {
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.colorSelected));
+            float scale = context.getResources().getDisplayMetrics().density;
+            int dpAsPixels = (int) (8*scale + 0.5f);
+            holder.avatar.setPadding(dpAsPixels,dpAsPixels,dpAsPixels,dpAsPixels);
+            holder.avatar.setImageResource(R.drawable.icon_avatar_selected);
+        } else {
+            holder.itemView.setBackgroundColor(0);
+            holder.avatar.setPadding(0,0,0,0);
+            holder.avatar.setImageResource(R.drawable.icon_side_avatar);
+        }
+        String[] temp = mail.getFrom().split(" ");
+        holder.fromText.setText(temp[0] == null ? mail.getFrom() : temp[0]);
         holder.subjectText.setText(mail.getSubject());
         holder.textText.setText(mail.getTextBody());
-        holder.dateText.setText(new SimpleDateFormat("MM月dd日",Locale.getDefault()).format(mail.getSendDate()));
+        holder.dateText.setText(new SimpleDateFormat("MM月dd日", Locale.getDefault()).format(mail.getSendDate()));
 
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -104,12 +117,15 @@ public class MailItemAdapter extends RecyclerView.Adapter<MailItemAdapter.MyView
         TextView subjectText;
         TextView textText;
         TextView dateText;
+        ImageView avatar;
+
         public MyViewHolder(View itemView) {
             super(itemView);
             fromText = (TextView) itemView.findViewById(R.id.mail_item_from);
             subjectText = (TextView) itemView.findViewById(R.id.mail_item_subject);
             textText = (TextView) itemView.findViewById(R.id.mail_item_text);
-           dateText = (TextView) itemView.findViewById(R.id.mail_item_date);
+            dateText = (TextView) itemView.findViewById(R.id.mail_item_date);
+            avatar = itemView.findViewById(R.id.mail_item_avatar);
         }
     }
 

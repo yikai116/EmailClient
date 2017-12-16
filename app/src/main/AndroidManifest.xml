@@ -32,7 +32,9 @@
             android:name=".activity.FeedbackActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.AddAccountActivity" />
-        <activity android:name=".activity.ManageAccountActivity"></activity>
+        <activity android:name=".activity.ManageAccountActivity" />
+        <activity android:name=".activity.SendActivity" />
+        <activity android:name=".activity.DetailActivity"></activity>
     </application>
 
 </manifest>

@@ -68,7 +68,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHo
         Log.i(SignActivity.TAG,"bind " + position + " " + isChoose.get(position));
         holder.accountText.setText(accounts.get(position).getAccount());
         holder.itemView.setBackgroundColor(isChoose.get(position)?
-                context.getResources().getColor(R.color.colorHint):0);
+                context.getResources().getColor(R.color.colorSelected):0);
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

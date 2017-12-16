@@ -15,4 +15,5 @@ public interface MainView {
     void showProgress(boolean show);
     void showMessage(String msg);
     void setData(ArrayList<MailPreviewResponse> mails);
+    void deleteSuccess();
 }

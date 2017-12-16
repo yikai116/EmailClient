@@ -88,7 +88,6 @@ public class FeedbackActivity extends AppCompatActivity {
             }
         });
         assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     private void initView() {

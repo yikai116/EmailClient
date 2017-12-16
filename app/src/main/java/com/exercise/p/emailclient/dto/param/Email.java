@@ -12,7 +12,6 @@ public class Email {
     private String pop3Server;
     private String pop3Port;
 
-
     public Email() {
         this.account = "";
         this.password = "";

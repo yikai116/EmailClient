@@ -35,6 +35,7 @@ public class MainPresenter {
         emailModel = RetrofitInstance.getRetrofitWithToken().create(EmailModel.class);
     }
 
+    // 得到所有账号
     public void getAccounts() {
         view.showProgress(true);
         Call<MyResponse<ArrayList<Email>>> accountCall = accountModel.getAccounts();
@@ -45,8 +46,8 @@ public class MainPresenter {
                 MyResponse<ArrayList<Email>> myResponse = response.body();
                 if ((myResponse != null)) {
                     if (myResponse.getCode() == 200) {
-                        GlobalInfo.accounts.clear();
-                        GlobalInfo.accounts.addAll(myResponse.getData());
+                        GlobalInfo.emails.clear();
+                        GlobalInfo.emails.addAll(myResponse.getData());
                         view.updateDrawer();
                     }
                 }
@@ -61,6 +62,7 @@ public class MainPresenter {
         });
     }
 
+    // 删除账号
     public void delete(final int id) {
         view.showProgress(true);
         List<Integer> list = new ArrayList<>();
@@ -74,9 +76,9 @@ public class MainPresenter {
                     Log.i(SignActivity.TAG, "delete server response: " + response.code());
                     if (response.body().getCode() == 200) {
                         view.showMessage("删除成功");
-                        for (Email email : GlobalInfo.accounts) {
+                        for (Email email : GlobalInfo.emails) {
                             if (email.getId() == id) {
-                                GlobalInfo.accounts.remove(email);
+                                GlobalInfo.emails.remove(email);
                                 break;
                             }
                         }
@@ -99,7 +101,8 @@ public class MainPresenter {
         });
     }
 
-    public void getEmail(int id, final String boxType) {
+    // 得到数据库邮件
+    public void getEmail(final int id, final String boxType) {
         view.showProgress(true);
         Call<MyResponse<List<FolderResponse>>> accountCall = emailModel.getFolder(id);
         accountCall.enqueue(new Callback<MyResponse<List<FolderResponse>>>() {
@@ -112,6 +115,10 @@ public class MainPresenter {
                     if (myResponse.getCode() == 200) {
                         GlobalInfo.allMail = myResponse.getData();
                         view.setData(GlobalInfo.getMailsByBox(boxType));
+                        Log.i(SignActivity.TAG,"all mail size " + GlobalInfo.allMail.size());
+                        for (FolderResponse folderResponse : GlobalInfo.allMail) {
+                            updateEmail(id,folderResponse.getId(),boxType);
+                        }
                     } else {
                         view.showMessage("抱歉，发生错误");
                     }
@@ -127,5 +134,76 @@ public class MainPresenter {
                 view.showProgress(false);
             }
         });
+    }
+
+    // 更新数据库邮件
+    public void updateEmail(int boxId, final int folderId, final String boxType) {
+        Log.i(SignActivity.TAG,"boxId:" + boxId);
+        Log.i(SignActivity.TAG,"folderId:" + folderId);
+        Log.i(SignActivity.TAG,"boxType:" + boxType);
+        Call<MyResponse<List<MailPreviewResponse>>> folder = emailModel.updateFolder(boxId, folderId);
+        folder.enqueue(new Callback<MyResponse<List<MailPreviewResponse>>>() {
+            @Override
+            public void onResponse(Call<MyResponse<List<MailPreviewResponse>>> call, Response<MyResponse<List<MailPreviewResponse>>> response) {
+                view.showProgress(false);
+                Log.i(SignActivity.TAG, "update Folder server code :" + response.code());
+                MyResponse<List<MailPreviewResponse>> myResponse = response.body();
+                if ((myResponse != null)) {
+                    if (myResponse.getCode() == 200) {
+                        GlobalInfo.updateMail(folderId, (ArrayList<MailPreviewResponse>) myResponse.getData());
+                        if (GlobalInfo.getFolderName(folderId).equals(boxType)){
+                            view.setData(GlobalInfo.getMailsByBox(boxType));
+                        }
+                    } else {
+                        view.showMessage("抱歉，发生错误");
+                    }
+                } else {
+                    view.showMessage("抱歉，发生错误");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse<List<MailPreviewResponse>>> call, Throwable t) {
+                t.printStackTrace();
+                view.showMessage("网络连接错误");
+                view.showProgress(false);
+            }
+        });
+    }
+
+    // 删除邮件
+    public void deleteEmails(ArrayList<MailPreviewResponse> mails,int folderId) {
+        view.showProgress(true);
+        List<Integer> list = new ArrayList<>();
+        for (MailPreviewResponse email : mails) {
+            list.add(email.getId());
+        }
+        Call<MyResponse> call = emailModel.deleteEmails(GlobalInfo.activeId,folderId,list);
+        call.enqueue(new Callback<MyResponse>() {
+            @Override
+            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                view.showProgress(false);
+                try {
+                    Log.i(SignActivity.TAG, "response: " + response.code());
+                    if (response.body().getCode() == 200) {
+                        view.showMessage("删除成功");
+                        view.deleteSuccess();
+                    } else {
+                        view.showMessage("抱歉，发生错误");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    view.showMessage("抱歉，发生错误");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse> call, Throwable t) {
+                view.showProgress(false);
+                view.showMessage("网络错误，请稍后再试");
+                t.printStackTrace();
+            }
+        });
+
     }
 }

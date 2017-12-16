@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
+        android:background="?selectableItemBackgroundBorderless"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/account_item_avatar"
+            android:id="@+id/mail_item_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:background="@drawable/shape_avatar"
             android:gravity="center"
             android:src="@drawable/icon_side_avatar" />
 
@@ -34,22 +38,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="123456@qq.com"
-                android:textColor="@android:color/black" />
+                tools:text="123456@qq.com"
+                android:textColor="@color/colorTextBlack" />
 
             <TextView
                 android:id="@+id/mail_item_subject"
                 style="@style/Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginStart="15dp"
-                android:maxLines="1"
+                android:layout_marginTop="4dp"
                 android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
                 android:gravity="center_vertical"
-                android:text="123456@qq.com" />
+                android:maxLines="1"
+                android:textColor="@color/colorTextGrey"
+                tools:text="123456@qq.com" />
 
             <TextView
                 android:id="@+id/mail_item_text"
@@ -57,22 +64,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:maxLines="1"
                 android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
                 android:gravity="center_vertical"
-                android:text="123456@qq.com" />
+                android:maxLines="1"
+                android:textColor="@color/colorTextGrey"
+                tools:text="123456@qq.com" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
+
             <TextView
                 android:id="@+id/mail_item_date"
+                style="@style/Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/Text"
                 android:layout_marginTop="5dp"
-                android:text="10:20"/>
+                android:fontFamily="sans-serif-light"
+                android:textSize="12sp"
+                android:textColor="@color/colorTextGrey"
+                tools:text="10:20" />
         </LinearLayout>
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorDivider" />
 </LinearLayout>

@@ -1,8 +1,9 @@
 package com.exercise.p.emailclient.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -15,16 +16,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.dto.data.Email;
 import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
 import com.exercise.p.emailclient.presenter.MainPresenter;
-import com.exercise.p.emailclient.utils.AccountAdapter;
 import com.exercise.p.emailclient.utils.MailItemAdapter;
 import com.exercise.p.emailclient.view.MainView;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -39,10 +40,12 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.exercise.p.emailclient.GlobalInfo.activeId;
 
 public class MainActivity extends AppCompatActivity implements MainView {
 
@@ -52,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private static final int SIDE_ALL = 1;
     private static final int SIDE_SENT = 2;
     private static final int SIDE_DRAFT = 3;
-    private static final int SIDE_GARBAGE = 4;
-    private static final int SIDE_DELETE = 5;
+    private static final int SIDE_JUNK = 4;
+    private static final int SIDE_TRASH = 5;
     private static final int SIDE_SETTING = 6;
     private static final int SIDE_FEEDBACK = 7;
 
@@ -64,10 +67,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @BindView(R.id.main_toolbar)
     Toolbar mainToolbar;
 
+    ArrayList<MailPreviewResponse> mail_del = new ArrayList<>();
+    ArrayList<View> views = new ArrayList<>();
 
     MailItemAdapter adapter;
 
-    ActionBar actionBar;
+    ActionBar actionBar = null;
     Drawer result;
     AccountHeader headerResult;
     ActionMode actionMode = null;
@@ -76,8 +81,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     // 提示框
     MaterialDialog materialDialog;
-    // 当前选择邮箱
-    int activeId = 0;
     // 邮箱文件夹当前选择
     private int side_select = SIDE_ALL;
 
@@ -88,7 +91,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
             actionMode = mode;
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.menu_action, menu);
-            actionMode.setTitle("123");
+            actionMode.setTitle("");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                getWindow().setStatusBarColor(getResources().getColor(R.color.colorActionModeBackgroundDark));
             return true;
         }
 
@@ -100,14 +105,25 @@ public class MainActivity extends AppCompatActivity implements MainView {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             //当actions的item被点击时回掉
-            mode.finish();
+            mainPresenter.deleteEmails(mail_del,GlobalInfo.getFolderId(getSelectTag()));
             return false;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             //当action mode销毁时的回掉
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
             actionMode = null;
+            for (View view : views) {
+                view.setBackgroundColor(0);
+                ImageView imageView= view.findViewById(R.id.mail_item_avatar);
+                imageView.setPadding(0,0,0,0);
+                imageView.setImageResource(R.drawable.icon_side_avatar);
+            }
+            adapter.setAllChoose(false);
+            mail_del.clear();
+            views.clear();
         }
     };
 
@@ -147,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         setSupportActionBar(mainToolbar);
         actionBar = getSupportActionBar();
         assert actionBar != null;
-        actionBar.setTitle("所有邮箱");
     }
 
     private void initRecyclerView() {
@@ -163,8 +178,20 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 .withProfileImagesClickable(false)
                 .withOnAccountHeaderItemLongClickListener(new AccountHeader.OnAccountHeaderItemLongClickListener() {
                     @Override
-                    public boolean onProfileLongClick(View view, IProfile profile, boolean current) {
-                        mainPresenter.delete((int) profile.getIdentifier());
+                    public boolean onProfileLongClick(View view, final IProfile profile, boolean current) {
+                        new MaterialDialog.Builder(MainActivity.this)
+                                .title("提示")
+                                .content("确定删除该账号？")
+                                .positiveText("确定")
+                                .negativeText("返回")
+                                .onAny(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        if (DialogAction.POSITIVE == which) {
+                                            mainPresenter.delete((int) profile.getIdentifier());
+                                        }
+                                    }
+                                }).show();
                         return false;
                     }
                 })
@@ -178,10 +205,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
                                 intent.setClass(MainActivity.this, AddAccountActivity.class);
                                 intent.putExtra("code", 1);
                                 startActivityForResult(intent, CODE);
-                            }
-                            else {
+                            } else {
                                 activeId = temp;
-                                mainPresenter.getEmail(activeId, (String) result.getDrawerItem(side_select).getTag());
+                                mainPresenter.getEmail(activeId, getSelectTag());
                             }
                         }
                         return true;
@@ -203,10 +229,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
                         new PrimaryDrawerItem().withName("草稿箱").withIdentifier(SIDE_DRAFT)
                                 .withTag("DRAFT")
                                 .withIcon(R.drawable.icon_side_draft),
-                        new PrimaryDrawerItem().withName("垃圾邮件").withIdentifier(SIDE_GARBAGE)
+                        new PrimaryDrawerItem().withName("垃圾邮件").withIdentifier(SIDE_JUNK)
                                 .withTag("JUNK")
                                 .withIcon(R.drawable.icon_side_garbage),
-                        new PrimaryDrawerItem().withName("已删除").withIdentifier(SIDE_DELETE)
+                        new PrimaryDrawerItem().withName("已删除").withIdentifier(SIDE_TRASH)
                                 .withTag("TRASH")
                                 .withIcon(R.drawable.icon_side_delete),
                         new DividerDrawerItem(),
@@ -232,8 +258,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
                                 startActivity(intent);
                                 break;
                             default:
-                                Log.i(SignActivity.TAG,"click tag： " + (String) drawerItem.getTag());
+                                Log.i(SignActivity.TAG, "click tag： " + (String) drawerItem.getTag());
                                 setData(GlobalInfo.getMailsByBox((String) drawerItem.getTag()));
+                                PrimaryDrawerItem primaryDrawerItem = (PrimaryDrawerItem) drawerItem;
+                                mainToolbar.setTitle(primaryDrawerItem.getName().toString());
                         }
                         side_select = temp;
                         return false;
@@ -250,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
             activeId = (int) headerResult.getActiveProfile().getIdentifier();
         }
         headerResult.clear();
-        if (GlobalInfo.accounts.size() == 0) {
+        if (GlobalInfo.emails.size() == 0) {
             toAddAccountActivity();
             return;
         }
@@ -259,8 +287,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
                         .withIcon(R.drawable.icon_side_add_account)
                         .withIdentifier(SIDE_ADD_COUNT)
         );
-        for (int i = 0; i < GlobalInfo.accounts.size(); i++) {
-            Email email = GlobalInfo.accounts.get(i);
+        for (int i = 0; i < GlobalInfo.emails.size(); i++) {
+            Email email = GlobalInfo.emails.get(i);
             headerResult.addProfile(new ProfileDrawerItem().withName(GlobalInfo.user.getUserName())
                     .withEmail(email.getAccount())
                     .withIcon(R.drawable.icon_side_avatar)
@@ -270,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         if (headerResult.getActiveProfile().getIdentifier() != activeId) {
             // 更新邮箱数据
             activeId = (int) headerResult.getActiveProfile().getIdentifier();
-            mainPresenter.getEmail(activeId, (String) result.getDrawerItem(side_select).getTag());
+            mainPresenter.getEmail(activeId, getSelectTag());
         }
     }
 
@@ -310,26 +338,86 @@ public class MainActivity extends AppCompatActivity implements MainView {
         mainRecyclerView.setAdapter(adapter);
     }
 
+
+    // text/html;charset=utf-8
+
+    @Override
+    public void deleteSuccess() {
+        adapter.removeAll(mail_del);
+        GlobalInfo.getMailsByBox(getSelectTag()).removeAll(mail_del);
+        mail_del.clear();
+        views.clear();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CODE && (GlobalInfo.Main2AddIschange || GlobalInfo.Main2ManageIschange)) {
+        if (requestCode == CODE && (GlobalInfo.Main2AddIsChange || GlobalInfo.Main2ManageIsChange)) {
             mainPresenter.getAccounts();
-            GlobalInfo.Main2AddIschange = false;
-            GlobalInfo.Main2ManageIschange = false;
+            GlobalInfo.Main2AddIsChange = false;
+            GlobalInfo.Main2ManageIsChange = false;
+            GlobalInfo.Main2SendIsChange = false;
         }
+        else if (GlobalInfo.Main2SendIsChange){
+            GlobalInfo.Main2SendIsChange = false;
+            mainPresenter.updateEmail(GlobalInfo.activeId,GlobalInfo.getFolderId(getSelectTag()),getSelectTag());
+        }
+
     }
 
+    @OnClick(R.id.main_fab)
+    public void edit() {
+        startActivity(new Intent(MainActivity.this, SendActivity.class));
+    }
 
     private MailItemAdapter.OnItemClickListener mOnItemClickListener = new MailItemAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
             Log.i(SignActivity.TAG, "click " + position);
+            if (actionMode != null) {
+                if (mail_del.contains(GlobalInfo.getMailsByBox(getSelectTag()).get(position))) {
+                    removeFromDel(view, position);
+                } else {
+                    add2Del(view, position);
+                }
+            } else {
+                startActivity(new Intent(MainActivity.this, DetailActivity.class));
+            }
         }
 
         @Override
         public void onItemLongClick(View view, int position) {
             Log.i(SignActivity.TAG, "long click " + position);
+            if (actionMode == null)
+                startSupportActionMode(mActionModeCallback);
+            add2Del(view, position);
         }
     };
+
+    private void add2Del(View view, int position) {
+        mail_del.add(GlobalInfo.getMailsByBox(getSelectTag()).get(position));
+        adapter.setChoose(position, true);
+        view.setBackgroundColor(getResources().getColor(R.color.colorSelected));
+        ImageView imageView= view.findViewById(R.id.mail_item_avatar);
+        Log.i(SignActivity.TAG,"selected");
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (8*scale + 0.5f);
+        imageView.setPadding(dpAsPixels,dpAsPixels,dpAsPixels,dpAsPixels);
+        imageView.setImageResource(R.drawable.icon_avatar_selected);
+        views.add(view);
+    }
+
+    public String getSelectTag(){
+        return (String) result.getDrawerItem(side_select).getTag();
+    }
+
+    private void removeFromDel(View view, int position) {
+        mail_del.remove(GlobalInfo.getMailsByBox(getSelectTag()).get(position));
+        adapter.setChoose(position, false);
+        views.remove(view);
+        view.setBackgroundColor(0);
+        ImageView imageView= view.findViewById(R.id.mail_item_avatar);
+        imageView.setPadding(0,0,0,0);
+        imageView.setImageResource(R.drawable.icon_side_avatar);
+    }
 }
