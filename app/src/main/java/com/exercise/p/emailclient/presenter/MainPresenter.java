@@ -115,9 +115,8 @@ public class MainPresenter {
                     if (myResponse.getCode() == 200) {
                         GlobalInfo.allMail = myResponse.getData();
                         view.setData(GlobalInfo.getMailsByBox(boxType));
-                        Log.i(SignActivity.TAG,"all mail size " + GlobalInfo.allMail.size());
                         for (FolderResponse folderResponse : GlobalInfo.allMail) {
-                            updateEmail(id,folderResponse.getId(),boxType);
+                            updateEmail(id, folderResponse.getId(), boxType);
                         }
                     } else {
                         view.showMessage("抱歉，发生错误");
@@ -137,21 +136,21 @@ public class MainPresenter {
     }
 
     // 更新数据库邮件
-    public void updateEmail(int boxId, final int folderId, final String boxType) {
-        Log.i(SignActivity.TAG,"boxId:" + boxId);
-        Log.i(SignActivity.TAG,"folderId:" + folderId);
-        Log.i(SignActivity.TAG,"boxType:" + boxType);
-        Call<MyResponse<List<MailPreviewResponse>>> folder = emailModel.updateFolder(boxId, folderId);
+    public void updateEmail(final int boxId, final int folderId, final String boxType) {
+        Log.i(SignActivity.TAG, "update boxId:" + boxId);
+        Log.i(SignActivity.TAG, "update folderId:" + folderId);
+        Log.i(SignActivity.TAG, "update boxType:" + boxType);
+        final Call<MyResponse<List<MailPreviewResponse>>> folder = emailModel.updateFolder(boxId, folderId);
         folder.enqueue(new Callback<MyResponse<List<MailPreviewResponse>>>() {
             @Override
             public void onResponse(Call<MyResponse<List<MailPreviewResponse>>> call, Response<MyResponse<List<MailPreviewResponse>>> response) {
                 view.showProgress(false);
-                Log.i(SignActivity.TAG, "update Folder server code :" + response.code());
+                Log.i(SignActivity.TAG, "update " + boxId + "_" + folderId + "_" + boxType + " server code :" + response.code());
                 MyResponse<List<MailPreviewResponse>> myResponse = response.body();
                 if ((myResponse != null)) {
                     if (myResponse.getCode() == 200) {
                         GlobalInfo.updateMail(folderId, (ArrayList<MailPreviewResponse>) myResponse.getData());
-                        if (GlobalInfo.getFolderName(folderId).equals(boxType)){
+                        if (GlobalInfo.getFolderName(folderId).equals(boxType)) {
                             view.setData(GlobalInfo.getMailsByBox(boxType));
                         }
                     } else {
@@ -172,13 +171,13 @@ public class MainPresenter {
     }
 
     // 删除邮件
-    public void deleteEmails(ArrayList<MailPreviewResponse> mails,int folderId) {
+    public void deleteEmails(ArrayList<MailPreviewResponse> mails, int folderId) {
         view.showProgress(true);
         List<Integer> list = new ArrayList<>();
         for (MailPreviewResponse email : mails) {
             list.add(email.getId());
         }
-        Call<MyResponse> call = emailModel.deleteEmails(GlobalInfo.activeId,folderId,list);
+        Call<MyResponse> call = emailModel.deleteEmails(GlobalInfo.activeId, folderId, list);
         call.enqueue(new Callback<MyResponse>() {
             @Override
             public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {

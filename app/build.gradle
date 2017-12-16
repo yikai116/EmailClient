@@ -25,6 +25,7 @@ android {
 repositories {
     mavenCentral()
     maven { url 'https://maven.google.com' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -61,4 +62,6 @@ dependencies {
 
     compile 'com.afollestad.material-dialogs:core:0.9.6.0'
     compile 'com.afollestad.material-dialogs:commons:0.9.6.0'
+
+    compile 'com.github.mthli:Knife:v1.1'
 }

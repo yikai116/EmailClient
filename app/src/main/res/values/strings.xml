@@ -11,4 +11,20 @@
     <string name="to">收件人</string>
     <string name="subject">主题</string>
     <string name="writeEmail">撰写电子邮件</string>
+
+    <!-- Knife Toast -->
+    <string name="toast_bold">加粗</string>
+    <string name="toast_italic">斜体</string>
+    <string name="toast_underline">下划线</string>
+    <string name="toast_strikethrough">删除线</string>
+    <string name="toast_bullet">标符号</string>
+    <string name="toast_quote">引用</string>
+    <string name="toast_insert_link">添加链接</string>
+    <string name="toast_format_clear">清空所有格式</string>
+
+    <!-- Knife Dialog -->
+    <string name="dialog_title">添加链接</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_button_ok">确认</string>
+    <string name="dialog_button_cancel">取消</string>
 </resources>

@@ -30,11 +30,11 @@ public class SendPresenter {
     }
 
     public void send(Mail mail){
-        view.showProgress(true);
         if (!FormatUtils.emailFormat(mail.getTo())) {
             view.showMessage("邮箱格式错误");
             return;
         }
+        view.showProgress(true);
         Call<MyResponse> call = model.sendEmail(GlobalInfo.activeId,mail);
         call.enqueue(new Callback<MyResponse>() {
             @Override
