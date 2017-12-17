@@ -43,6 +43,7 @@ public class SendPresenter {
                     Log.i(SignActivity.TAG,"submit email server response: " + response.code());
                     if (response.body().getCode() == 200) {
                         view.showMessage("发送成功");
+                        GlobalInfo.Main2SendIsChange = true;
                         view.finishActivity();
                     }
                     else {

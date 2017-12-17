@@ -38,4 +38,12 @@ public interface EmailModel {
     Call<MyResponse> sendEmail(
             @Path("boxId") int boxId,
             @Body Mail mail);
+
+    // 标记已读未读
+    @POST("mail/{boxId}/{folderId}/{mailId}")
+    Call<MyResponse> markAsSeen(
+            @Path("boxId") int boxId,
+            @Path("folderId") int folderId,
+            @Path("mailId") int mailId);
+
 }

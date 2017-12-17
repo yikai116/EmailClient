@@ -12,6 +12,8 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -20,10 +22,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
+import com.exercise.p.emailclient.presenter.DetailPresenter;
 import com.exercise.p.emailclient.utils.SimpleAccount;
+import com.exercise.p.emailclient.view.DetailView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements DetailView {
 
     @BindView(R.id.detail_toolbar)
     Toolbar detailToolbar;
@@ -57,10 +62,11 @@ public class DetailActivity extends AppCompatActivity {
     LinearLayout detail;
 
     public static final int REPLY = 0;
-    public static final int FORWARD = 0;
+    public static final int FORWARD = 1;
 
     MailPreviewResponse mail;
 
+    MaterialDialog materialDialog;
     String folderType;
     int position;
     @BindView(R.id.processBar)
@@ -69,11 +75,18 @@ public class DetailActivity extends AppCompatActivity {
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
+            detailActionLayout.setVisibility(View.VISIBLE);
             processBar.setVisibility(View.GONE);
             mailDetailContent.setVisibility(View.VISIBLE);
             return false;
         }
     });
+    @BindView(R.id.detail_action_layout)
+    LinearLayout detailActionLayout;
+    @BindView(R.id.detail_folder_name)
+    TextView detailFolderName;
+
+    DetailPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +112,9 @@ public class DetailActivity extends AppCompatActivity {
         }
         initToolBar();
         initView();
+        presenter = new DetailPresenter(this);
+        if (!mail.isSeen())
+            presenter.markAsSeen(GlobalInfo.getFolderId(folderType), mail.getId(), false);
     }
 
     private void initToolBar() {
@@ -113,31 +129,43 @@ public class DetailActivity extends AppCompatActivity {
             });
         }
         assert getSupportActionBar() != null;
-    }
-
-    @Override
-    public void finish() {
-        mailDetailContent.clearCache(false);
-        super.finish();
+        detailToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.action_delete) {
+                    Log.i(SignActivity.TAG, "detail activity click delete");
+                    ArrayList<MailPreviewResponse> list = new ArrayList<>();
+                    list.add(mail);
+                    presenter.deleteEmails(list, GlobalInfo.getFolderId(folderType));
+                }
+                if (item.getItemId() == R.id.action_read) {
+                    Log.i(SignActivity.TAG, "detail activity click read");
+                    presenter.markAsSeen(GlobalInfo.getFolderId(folderType), mail.getId(), true);
+                }
+                return false;
+            }
+        });
     }
 
     private void initView() {
         detailSubject.setText(mail.getSubject());
+        if (folderType.equals("INBOX"))
+            detailFolderName.setText(">>收件箱");
+        if (folderType.equals("SENT"))
+            detailFolderName.setText(">>发件箱");
+        if (folderType.equals("DRAFT"))
+            detailFolderName.setText(">>草稿箱");
+        if (folderType.equals("JUNK"))
+            detailFolderName.setText(">>垃圾邮件");
+        if (folderType.equals("TRASH"))
+            detailFolderName.setText(">>已删除");
         setSimpleDetail();
         infoDetailFrom.setText(
                 SimpleAccount.toBlueSpanBuilder(mail.getFrom(), DetailActivity.this));
-
         infoDetailTo.setText(
                 SimpleAccount.toBlueSpanBuilder(mail.getTo(), DetailActivity.this));
-
         infoDetailDate.setText(new SimpleDateFormat("yyyy年MM月dd日 HH:mm",
                 Locale.getDefault()).format(mail.getSendDate()));
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-//            mailDetailContent.setText(Html.fromHtml(mail.getHtmlBody(), Html.FROM_HTML_MODE_COMPACT));
-//        else
-//            mailDetailContent.setText(Html.fromHtml(mail.getHtmlBody()));
-
         mailDetailContent.getSettings().setDefaultTextEncodingName("UTF -8");//设置默认为utf-8
         mailDetailContent.getSettings().setSupportZoom(true);
         mailDetailContent.getSettings().setBuiltInZoomControls(true);
@@ -145,7 +173,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 Log.i(SignActivity.TAG, "page finished");
-                handler.sendEmptyMessageDelayed(0,1000);
+                handler.sendEmptyMessageDelayed(0, 1000);
                 super.onPageFinished(view, url);
             }
 
@@ -207,6 +235,44 @@ public class DetailActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void finish() {
+        mailDetailContent.clearCache(false);
+        super.finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_action, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void showProgress(boolean show) {
+        if (materialDialog == null) {
+            materialDialog = new MaterialDialog.Builder(this)
+                    .title("请稍后")
+                    .content("正在提交")
+                    .progress(true, 0)
+                    .show();
+        }
+
+        if (show)
+            materialDialog.show();
+        else
+            materialDialog.dismiss();
+    }
+
+    @Override
+    public void showMessage(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void finishActivity() {
+        this.finish();
     }
 
     @OnClick({R.id.detail_reply, R.id.detail_reply_all})

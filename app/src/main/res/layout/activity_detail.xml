@@ -20,23 +20,51 @@
             android:layout_height="?actionBarSize"
             android:background="?colorPrimary"
             android:translationZ="2dp"
-            app:title="邮箱详情" />
+            app:title="邮件详情" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/detail_subject"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:minHeight="90dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:textSize="20sp"
-                tools:text="这是主题" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/detail_subject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxWidth="200dp"
+                    android:singleLine="true"
+                    android:textSize="20sp"
+                    tools:text="这是主题这是主题这是主题题这是主题" />
+
+                <TextView
+                    android:id="@+id/detail_folder_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorTextBgGrey"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:maxLines="1"
+                    android:textSize="14sp"
+                    tools:text="收件箱" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -226,13 +254,15 @@
                     android:background="@color/colorDivider" />
 
                 <LinearLayout
+                    android:id="@+id/detail_action_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:minHeight="80dp"
                     android:orientation="horizontal"
                     android:paddingLeft="20dp"
-                    android:paddingRight="20dp">
+                    android:paddingRight="20dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/detail_reply"

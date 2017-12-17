@@ -23,6 +23,7 @@ public class GlobalInfo {
     public static boolean Manage2AddIsChange = false;
     public static boolean Main2ManageIsChange = false;
     public static boolean Main2SendIsChange = false;
+    public static boolean Main2DetailIsChange = false;
     public static List<FolderResponse> allMail = new ArrayList<>();
 
     // 当前邮箱账户id

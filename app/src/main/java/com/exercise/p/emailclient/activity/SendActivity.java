@@ -58,12 +58,18 @@ public class SendActivity extends AppCompatActivity implements SendView {
         int position = getIntent().getIntExtra("position", -1);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_send);
         mail = new Mail();
+        ButterKnife.bind(this);
+        binding.setShow(false);
+        presenter = new SendPresenter(this);
+        initToolBar();
+        initTool();
+
         if (folderType != null && position != -1) {
             int action = getIntent().getIntExtra("action", DetailActivity.REPLY);
             Log.i(SignActivity.TAG, "action: " + action);
             MailPreviewResponse temp = GlobalInfo.getMailsByBox(folderType).get(position);
             if (action == DetailActivity.REPLY) {
-                mail.setSubject("Re：" + temp.getSubject());
+                mail.setSubject("Re:" + temp.getSubject());
                 ArrayList<SimpleAccount> accounts = SimpleAccount.toList(temp.getFrom());
                 StringBuilder stringBuilder = new StringBuilder("");
                 for (int i = 0; i < accounts.size(); i++) {
@@ -73,18 +79,13 @@ public class SendActivity extends AppCompatActivity implements SendView {
                 mail.setTo(stringBuilder.toString());
             } else {
                 mail.setSubject(temp.getSubject());
-                if (temp.getHtmlBody() == null || temp.getHtmlBody().equals(""))
-                    mail.setHtmlBody(temp.getTextBody());
+                if (temp.getTextBody() == null || temp.getTextBody().equals(""))
+                    knife.setText(temp.getHtmlBody());
                 else
-                    mail.setHtmlBody(temp.getTextBody());
+                    knife.setText(temp.getTextBody());
             }
         }
         binding.setMail(mail);
-        binding.setShow(false);
-        ButterKnife.bind(this);
-        presenter = new SendPresenter(this);
-        initToolBar();
-        initTool();
     }
 
     /**

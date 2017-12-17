@@ -8,6 +8,7 @@
     <color name="colorHint">#9E9E9E</color>
     <color name="colorDivider">#E0E0E0</color>
     <color name="colorDeepText">#767676</color>
+    <color name="colorTextBgGrey">#EEEEEE</color>
 
     <color name="colorTextBlue">#4285F4</color>
 

@@ -92,18 +92,33 @@ public class MailItemAdapter extends RecyclerView.Adapter<MailItemAdapter.MyView
             if (i != fromList.size() - 1)
                 fromStr.append(",");
         }
-        holder.fromText.setText(fromStr);
-        if (mail.isSeen())
+        String data = new SimpleDateFormat("MM月dd日", Locale.getDefault()).format(mail.getSendDate());
+        if (mail.isSeen()) {
+            holder.subjectText.setTextColor(context.getResources().getColor(R.color.colorTextGrey));
+            holder.dateText.setTextColor(context.getResources().getColor(R.color.colorTextGrey));
+            holder.fromText.setText(fromStr);
             holder.subjectText.setText(mail.getSubject());
-        else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            holder.dateText.setText(new SimpleDateFormat("MM月dd日", Locale.getDefault()).format(mail.getSendDate()));
+        } else {
+            holder.subjectText.setTextColor(context.getResources().getColor(R.color.colorTextBlack));
+            holder.dateText.setTextColor(context.getResources().getColor(R.color.colorTextBlue));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                holder.fromText.setText(Html.fromHtml(
+                        "<b>" + fromStr + "</b>", Html.FROM_HTML_MODE_COMPACT));
                 holder.subjectText.setText(Html.fromHtml(
                         "<b>" + mail.getSubject() + "</b>", Html.FROM_HTML_MODE_COMPACT));
-            else
-                holder.subjectText.setText(Html.fromHtml("<b>" + mail.getSubject() + "</b>"));
+                holder.dateText.setText(Html.fromHtml(
+                        "<b>" + data + "</b>", Html.FROM_HTML_MODE_COMPACT));
+            } else {
+                holder.fromText.setText(Html.fromHtml(
+                        "<b>" + fromStr + "</b>"));
+                holder.subjectText.setText(Html.fromHtml(
+                        "<b>" + mail.getSubject() + "</b>"));
+                holder.dateText.setText(Html.fromHtml(
+                        "<b>" + data + "</b>"));
+            }
         }
         holder.textText.setText(mail.getTextBody());
-        holder.dateText.setText(new SimpleDateFormat("MM月dd日", Locale.getDefault()).format(mail.getSendDate()));
 
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -8,6 +8,12 @@
         android:title="删除"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_read"
+        android:icon="@drawable/icon_action_menu_read"
+        android:title="已读"
+        app:showAsAction="always" />
+
 
 
 </menu>

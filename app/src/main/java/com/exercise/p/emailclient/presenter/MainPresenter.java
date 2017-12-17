@@ -1,5 +1,6 @@
 package com.exercise.p.emailclient.presenter;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.exercise.p.emailclient.GlobalInfo;
@@ -172,6 +173,8 @@ public class MainPresenter {
 
     // 删除邮件
     public void deleteEmails(ArrayList<MailPreviewResponse> mails, int folderId) {
+        if (mails.size() < 1)
+            return;
         view.showProgress(true);
         List<Integer> list = new ArrayList<>();
         for (MailPreviewResponse email : mails) {
@@ -204,5 +207,54 @@ public class MainPresenter {
             }
         });
 
+    }
+
+    // 标记已读未读
+    public void markAsSeen(ArrayList<MailPreviewResponse> mails, final int folderId) {
+        if (mails.size() < 1)
+            return;
+        boolean seen = !mails.get(0).isSeen();
+//        int hasSeen = 0;
+//        for (MailPreviewResponse email : mails) {
+//            if (email.isSeen())
+//                hasSeen++;
+//        }
+//        if (hasSeen >= (mails.size() + 1) / 2)
+//            seen = true;
+//        else
+//            seen = false;
+
+        for (final MailPreviewResponse email : mails) {
+            if (email.isSeen() != seen) {
+                email.setSeen(seen);
+                Call<MyResponse> call = emailModel.markAsSeen(
+                        GlobalInfo.activeId, folderId, email.getId());
+                call.enqueue(new Callback<MyResponse>() {
+                    @Override
+                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                        view.showProgress(false);
+                        try {
+                            Log.i(SignActivity.TAG, email.getId() + " response: " + response.code());
+                            if (response.body().getCode() != 200) {
+                                view.showMessage("抱歉，发生错误");
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            view.showMessage("抱歉，发生错误");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MyResponse> call, Throwable t) {
+                        call.cancel();
+                        email.setSeen(!email.isSeen());
+                        view.setData(GlobalInfo.getMailsByBox(GlobalInfo.getFolderName(folderId)));
+                        view.showMessage("网络错误，请稍后再试");
+                        t.printStackTrace();
+                    }
+                });
+            }
+        }
+        view.setData(GlobalInfo.getMailsByBox(GlobalInfo.getFolderName(folderId)));
     }
 }

@@ -109,7 +109,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             //当actions的item被点击时回掉
-            mainPresenter.deleteEmails(mail_del, GlobalInfo.getFolderId(getSelectTag()));
+            if (item.getItemId() == R.id.action_delete)
+                mainPresenter.deleteEmails(mail_del, GlobalInfo.getFolderId(getSelectTag()));
+            if (item.getItemId() == R.id.action_read)
+                mainPresenter.markAsSeen(mail_del,GlobalInfo.getFolderId(getSelectTag()));
             return false;
         }
 
@@ -357,9 +360,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
             mainPresenter.getAccounts();
             GlobalInfo.Main2AddIsChange = false;
             GlobalInfo.Main2ManageIsChange = false;
+        } else if (GlobalInfo.Main2SendIsChange || GlobalInfo.Main2DetailIsChange) {
             GlobalInfo.Main2SendIsChange = false;
-        } else if (GlobalInfo.Main2SendIsChange) {
-            GlobalInfo.Main2SendIsChange = false;
+            GlobalInfo.Main2DetailIsChange = false;
             mainPresenter.updateEmail(GlobalInfo.activeId, GlobalInfo.getFolderId(getSelectTag()), getSelectTag());
         }
 
@@ -382,9 +385,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 }
             } else {
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                intent.putExtra("folderType",getSelectTag());
-                intent.putExtra("position",position);
-                startActivity(intent);
+                intent.putExtra("folderType", getSelectTag());
+                intent.putExtra("position", position);
+                startActivityForResult(intent,CODE);
             }
         }
 
@@ -424,13 +427,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
         imageView.setImageResource(R.drawable.icon_side_avatar);
     }
 
-    private void initSwipRefresh(){
+    private void initSwipRefresh() {
         swipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRefreshWidget.setRefreshing(true);
-                Log.i(SignActivity.TAG,"refresh");
-                mainPresenter.updateEmail(activeId,GlobalInfo.getFolderId(getSelectTag()),getSelectTag());
+                Log.i(SignActivity.TAG, "refresh");
+                mainPresenter.updateEmail(activeId, GlobalInfo.getFolderId(getSelectTag()), getSelectTag());
                 swipeRefreshWidget.setRefreshing(false);
             }
         });
