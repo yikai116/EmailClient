@@ -17,7 +17,7 @@
             android:layout_height="?actionBarSize"
             android:background="?colorPrimary"
             android:translationZ="2dp"
-            app:title="所有邮件"/>
+            app:title="所有邮件" />
 
         <FrameLayout
             android:id="@+id/main_pager"
@@ -26,10 +26,17 @@
             android:layout_weight="1"
             android:gravity="center">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/main_recycler_view"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_widget"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/main_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </android.support.v4.widget.SwipeRefreshLayout>
+
         </FrameLayout>
     </LinearLayout>
 
@@ -39,8 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_margin="16dp"
-        app:backgroundTint="@color/colorTheme"
         android:src="@drawable/icon_email_edit"
+        app:backgroundTint="@color/colorTheme"
         app:fabSize="normal"
         app:layout_anchor="@id/main_pager"
         app:layout_anchorGravity="bottom|right|end" />

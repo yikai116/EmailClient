@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     RecyclerView mainRecyclerView;
     @BindView(R.id.main_toolbar)
     Toolbar mainToolbar;
+    @BindView(R.id.swipe_refresh_widget)
+    SwipeRefreshLayout swipeRefreshWidget;
 
     ArrayList<MailPreviewResponse> mail_del = new ArrayList<>();
     ArrayList<View> views = new ArrayList<>();
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             //当actions的item被点击时回掉
-            mainPresenter.deleteEmails(mail_del,GlobalInfo.getFolderId(getSelectTag()));
+            mainPresenter.deleteEmails(mail_del, GlobalInfo.getFolderId(getSelectTag()));
             return false;
         }
 
@@ -117,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
             actionMode = null;
             for (View view : views) {
                 view.setBackgroundColor(0);
-                ImageView imageView= view.findViewById(R.id.mail_item_avatar);
-                imageView.setPadding(0,0,0,0);
+                ImageView imageView = view.findViewById(R.id.mail_item_avatar);
+                imageView.setPadding(0, 0, 0, 0);
                 imageView.setImageResource(R.drawable.icon_side_avatar);
             }
             adapter.setAllChoose(false);
@@ -155,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         initToolBar();
         initDrawer();
         initRecyclerView();
+        initSwipRefresh();
         mainPresenter.getAccounts();
     }
 
@@ -170,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         mainRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    public void initDrawer() {
+    private void initDrawer() {
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.color.primary)
@@ -338,9 +342,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         mainRecyclerView.setAdapter(adapter);
     }
 
-
-    // text/html;charset=utf-8
-
     @Override
     public void deleteSuccess() {
         adapter.removeAll(mail_del);
@@ -357,10 +358,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
             GlobalInfo.Main2AddIsChange = false;
             GlobalInfo.Main2ManageIsChange = false;
             GlobalInfo.Main2SendIsChange = false;
-        }
-        else if (GlobalInfo.Main2SendIsChange){
+        } else if (GlobalInfo.Main2SendIsChange) {
             GlobalInfo.Main2SendIsChange = false;
-            mainPresenter.updateEmail(GlobalInfo.activeId,GlobalInfo.getFolderId(getSelectTag()),getSelectTag());
+            mainPresenter.updateEmail(GlobalInfo.activeId, GlobalInfo.getFolderId(getSelectTag()), getSelectTag());
         }
 
     }
@@ -398,16 +398,16 @@ public class MainActivity extends AppCompatActivity implements MainView {
         mail_del.add(GlobalInfo.getMailsByBox(getSelectTag()).get(position));
         adapter.setChoose(position, true);
         view.setBackgroundColor(getResources().getColor(R.color.colorSelected));
-        ImageView imageView= view.findViewById(R.id.mail_item_avatar);
-        Log.i(SignActivity.TAG,"selected");
+        ImageView imageView = view.findViewById(R.id.mail_item_avatar);
+        Log.i(SignActivity.TAG, "selected");
         float scale = getResources().getDisplayMetrics().density;
-        int dpAsPixels = (int) (8*scale + 0.5f);
-        imageView.setPadding(dpAsPixels,dpAsPixels,dpAsPixels,dpAsPixels);
+        int dpAsPixels = (int) (8 * scale + 0.5f);
+        imageView.setPadding(dpAsPixels, dpAsPixels, dpAsPixels, dpAsPixels);
         imageView.setImageResource(R.drawable.icon_avatar_selected);
         views.add(view);
     }
 
-    public String getSelectTag(){
+    public String getSelectTag() {
         return (String) result.getDrawerItem(side_select).getTag();
     }
 
@@ -416,8 +416,20 @@ public class MainActivity extends AppCompatActivity implements MainView {
         adapter.setChoose(position, false);
         views.remove(view);
         view.setBackgroundColor(0);
-        ImageView imageView= view.findViewById(R.id.mail_item_avatar);
-        imageView.setPadding(0,0,0,0);
+        ImageView imageView = view.findViewById(R.id.mail_item_avatar);
+        imageView.setPadding(0, 0, 0, 0);
         imageView.setImageResource(R.drawable.icon_side_avatar);
+    }
+
+    private void initSwipRefresh(){
+        swipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshWidget.setRefreshing(true);
+                Log.i(SignActivity.TAG,"refresh");
+                mainPresenter.updateEmail(activeId,GlobalInfo.getFolderId(getSelectTag()),getSelectTag());
+                swipeRefreshWidget.setRefreshing(false);
+            }
+        });
     }
 }

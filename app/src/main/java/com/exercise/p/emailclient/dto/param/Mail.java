@@ -20,7 +20,9 @@ public class Mail {
         this.from = GlobalInfo.getCurrent().getAccount();
         this.htmlBody = "";
         this.to = "";
-        this.contentType = "text/plain;charset=utf-8";
+        // html ： text/html;charset=utf-8
+        // text ： text/plain;charset=utf-8
+        this.contentType = "text/html;charset=utf-8";
     }
 
     public String getSubject() {
