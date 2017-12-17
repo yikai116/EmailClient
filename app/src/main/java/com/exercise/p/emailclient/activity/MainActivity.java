@@ -1,6 +1,7 @@
 package com.exercise.p.emailclient.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
             actionMode = null;
             for (View view : views) {
-                view.setBackgroundColor(0);
+                view.setBackgroundColor(Color.WHITE);
                 ImageView imageView = view.findViewById(R.id.mail_item_avatar);
                 imageView.setPadding(0, 0, 0, 0);
                 imageView.setImageResource(R.drawable.icon_side_avatar);
@@ -415,7 +416,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         mail_del.remove(GlobalInfo.getMailsByBox(getSelectTag()).get(position));
         adapter.setChoose(position, false);
         views.remove(view);
-        view.setBackgroundColor(0);
+        view.setBackgroundColor(Color.WHITE);
         ImageView imageView = view.findViewById(R.id.mail_item_avatar);
         imageView.setPadding(0, 0, 0, 0);
         imageView.setImageResource(R.drawable.icon_side_avatar);

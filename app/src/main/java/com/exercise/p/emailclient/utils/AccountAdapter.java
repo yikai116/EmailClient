@@ -1,6 +1,7 @@
 package com.exercise.p.emailclient.utils;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,7 +69,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHo
         Log.i(SignActivity.TAG,"bind " + position + " " + isChoose.get(position));
         holder.accountText.setText(boxes.get(position).getAccount());
         holder.itemView.setBackgroundColor(isChoose.get(position)?
-                context.getResources().getColor(R.color.colorSelected):0);
+                context.getResources().getColor(R.color.colorSelected): Color.WHITE);
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

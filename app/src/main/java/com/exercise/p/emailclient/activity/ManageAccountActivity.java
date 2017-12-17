@@ -1,6 +1,7 @@
 package com.exercise.p.emailclient.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -118,7 +119,7 @@ public class ManageAccountActivity extends AppCompatActivity implements ManageAc
         account_del.remove(accounts.get(position));
         adapter.setChoose(position, false);
         views.remove(view);
-        view.setBackgroundColor(0);
+        view.setBackgroundColor(Color.WHITE);
     }
 
     @Override
@@ -177,7 +178,7 @@ public class ManageAccountActivity extends AppCompatActivity implements ManageAc
             //当action mode销毁时的回掉
             actionMode = null;
             for (View view : views) {
-                view.setBackgroundColor(0);
+                view.setBackgroundColor(Color.WHITE);
             }
             adapter.setAllChoose(false);
             account_del.clear();
