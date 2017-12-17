@@ -7,8 +7,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="email"
-            type="com.exercise.p.emailclient.dto.param.Email" />
+            name="mailBox"
+            type="com.exercise.p.emailclient.dto.param.MailBox" />
     </data>
 
     <LinearLayout
@@ -44,7 +44,7 @@
                 android:hint="@string/emailHint"
                 android:inputType="textEmailAddress"
                 android:lines="1"
-                android:text="@={email.account}"
+                android:text="@={mailBox.account}"
                 />
 
             <EditText
@@ -58,7 +58,7 @@
                 android:hint="@string/pswHint"
                 android:inputType="textPassword"
                 android:lines="1"
-                android:text="@={email.password}" />
+                android:text="@={mailBox.password}" />
 
             <EditText
                 android:id="@+id/add_account_edit_smtp_server"
@@ -71,7 +71,7 @@
                 android:hint="smtp服务器地址"
                 android:inputType="textUri"
                 android:lines="1"
-                android:text="@={email.smtpServer}" />
+                android:text="@={mailBox.smtpServer}" />
 
             <EditText
                 android:id="@+id/add_account_edit_smtp_port"
@@ -84,7 +84,7 @@
                 android:hint="smtp服务器端口"
                 android:inputType="number"
                 android:lines="1"
-                android:text="@={email.smtpPort}" />
+                android:text="@={mailBox.smtpPort}" />
 
             <EditText
                 android:id="@+id/add_account_edit_pop3_server"
@@ -97,7 +97,7 @@
                 android:hint="pop3服务器地址"
                 android:inputType="textUri"
                 android:lines="1"
-                android:text="@={email.pop3Server}" />
+                android:text="@={mailBox.pop3Server}" />
 
             <EditText
                 android:id="@+id/add_account_edit_pop3_port"
@@ -110,7 +110,7 @@
                 android:hint="pop3服务器端口"
                 android:inputType="number"
                 android:lines="1"
-                android:text="@={email.pop3Port}" />
+                android:text="@={mailBox.pop3Port}" />
 
             <Button
                 android:id="@+id/add_account_button_submit"

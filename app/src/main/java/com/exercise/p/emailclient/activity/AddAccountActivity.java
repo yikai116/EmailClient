@@ -6,18 +6,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.databinding.ActivityAddAccountBinding;
-import com.exercise.p.emailclient.dto.param.Email;
+import com.exercise.p.emailclient.dto.param.MailBox;
 import com.exercise.p.emailclient.presenter.AddAccountPresenter;
 import com.exercise.p.emailclient.view.AddAccountView;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +24,7 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
 
 
     ActivityAddAccountBinding binding;
-    Email email;
+    MailBox mailBox;
 
 
     AddAccountPresenter presenter;
@@ -35,12 +32,6 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
     MaterialDialog materialDialog;
     @BindView(R.id.add_account_toolbar)
     Toolbar addAccountToolbar;
-    @BindView(R.id.add_account_edit_email)
-    EditText addAccountEditEmail;
-    @BindView(R.id.add_account_edit_psw)
-    EditText addAccountEditPsw;
-    @BindView(R.id.add_account_button_submit)
-    Button addAccountButtonSubmit;
 
     private int code = 0;
     @Override
@@ -49,15 +40,15 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
         setContentView(R.layout.activity_add_account);
         Intent intent = getIntent();
         code = intent.getIntExtra("code",0);
-        email = new Email();
-//        email.setSmtpServer("smtp.163.com");
-//        email.setSmtpPort("465");
-//        email.setPop3Server("pop.163.com");
-//        email.setPop3Port("995");
-//        email.setAccount("15196673448@163.com");
-//        email.setPassword("yk123456");
+        mailBox = new MailBox();
+//        mailBox.setSmtpServer("smtp.163.com");
+//        mailBox.setSmtpPort("465");
+//        mailBox.setPop3Server("pop.163.com");
+//        mailBox.setPop3Port("995");
+//        mailBox.setAccount("15196673448@163.com");
+//        mailBox.setPassword("yk123456");
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_account);
-        binding.setEmail(email);
+        binding.setMailBox(mailBox);
         ButterKnife.bind(this);
         initToolBar();
         presenter = new AddAccountPresenter(this);
@@ -68,7 +59,7 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
      */
     private void initToolBar() {
         setSupportActionBar(addAccountToolbar);
-        if (GlobalInfo.emails.size() != 0) {
+        if (GlobalInfo.mailBoxResponses.size() != 0) {
             addAccountToolbar.setNavigationIcon(R.drawable.icon_back);
             addAccountToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,11 +73,11 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
 
     @OnClick(R.id.add_account_button_submit)
     public void submit() {
-        email.setAccount(email.getAccount().trim());
-        email.setSmtpServer(email.getSmtpServer().trim());
-        email.setPop3Server(email.getPop3Server().trim());
-        binding.setEmail(email);
-        presenter.submitAccount(email);
+        mailBox.setAccount(mailBox.getAccount().trim());
+        mailBox.setSmtpServer(mailBox.getSmtpServer().trim());
+        mailBox.setPop3Server(mailBox.getPop3Server().trim());
+        binding.setMailBox(mailBox);
+        presenter.submitAccount(mailBox);
     }
 
     @Override
@@ -112,7 +103,7 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
 
     @Override
     public void finishActivity() {
-        if (GlobalInfo.emails.size() == 0) {
+        if (GlobalInfo.mailBoxResponses.size() == 0) {
             Intent intent = new Intent();
             intent.setClass(AddAccountActivity.this, MainActivity.class);
             startActivity(intent);

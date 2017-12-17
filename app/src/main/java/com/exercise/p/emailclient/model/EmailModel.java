@@ -3,14 +3,12 @@ package com.exercise.p.emailclient.model;
 import com.exercise.p.emailclient.dto.MyResponse;
 import com.exercise.p.emailclient.dto.data.FolderResponse;
 import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
-import com.exercise.p.emailclient.dto.param.Email;
 import com.exercise.p.emailclient.dto.param.Mail;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;

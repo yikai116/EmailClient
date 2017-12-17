@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.data.UserInfo;
+import com.exercise.p.emailclient.dto.data.UserInfoResponse;
 import com.exercise.p.emailclient.dto.param.User;
 import com.exercise.p.emailclient.model.RetrofitInstance;
 import com.exercise.p.emailclient.model.SignModel;
@@ -46,12 +46,12 @@ public class SignPresenter {
             return;
         }
         view.showProgress(true);
-        Call<MyResponse<UserInfo>> call = signModel.signIn(user, cookie);
-        call.enqueue(new Callback<MyResponse<UserInfo>>() {
+        Call<MyResponse<UserInfoResponse>> call = signModel.signIn(user, cookie);
+        call.enqueue(new Callback<MyResponse<UserInfoResponse>>() {
             @Override
-            public void onResponse(Call<MyResponse<UserInfo>> call, Response<MyResponse<UserInfo>> response) {
+            public void onResponse(Call<MyResponse<UserInfoResponse>> call, Response<MyResponse<UserInfoResponse>> response) {
                 view.showProgress(false);
-                MyResponse<UserInfo> myResponse = response.body();
+                MyResponse<UserInfoResponse> myResponse = response.body();
                 if (myResponse.getCode() != 200) {
                     view.showMessage(myResponse.getMessage());
                 } else {
@@ -62,7 +62,7 @@ public class SignPresenter {
             }
 
             @Override
-            public void onFailure(Call<MyResponse<UserInfo>> call, Throwable t) {
+            public void onFailure(Call<MyResponse<UserInfoResponse>> call, Throwable t) {
                 view.showProgress(false);
                 view.showMessage("网络错误，请稍后再试");
                 t.printStackTrace();

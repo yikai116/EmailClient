@@ -5,7 +5,6 @@ import android.util.Log;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.activity.SignActivity;
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.data.UserInfo;
 import com.exercise.p.emailclient.dto.param.Mail;
 import com.exercise.p.emailclient.model.EmailModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;

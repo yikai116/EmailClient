@@ -4,9 +4,9 @@ package com.exercise.p.emailclient.dto.data;
  * Created by p on 2017/12/5.
  */
 
-public class UserInfo {
+public class UserInfoResponse {
     /**
-     * userName : Email
+     * userName : MailBoxResponse
      * email : 1234567890@qq.com
      * accessToken : bClFg4hi7IM5h4mh
      * root : false

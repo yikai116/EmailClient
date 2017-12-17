@@ -26,7 +26,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initToolBar() {
         setSupportActionBar(detailToolbar);
-        if (GlobalInfo.emails.size() != 0) {
+        if (GlobalInfo.mailBoxResponses.size() != 0) {
             detailToolbar.setNavigationIcon(R.drawable.icon_back);
             detailToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override

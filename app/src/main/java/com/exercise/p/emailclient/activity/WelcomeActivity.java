@@ -12,17 +12,12 @@ import android.widget.Toast;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.data.Email;
-import com.exercise.p.emailclient.dto.data.UserInfo;
-import com.exercise.p.emailclient.model.AccountModel;
+import com.exercise.p.emailclient.dto.data.UserInfoResponse;
 import com.exercise.p.emailclient.model.RetrofitInstance;
 import com.exercise.p.emailclient.model.WelcomeModel;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,11 +59,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void authToken() {
         WelcomeModel model = RetrofitInstance.getRetrofitWithToken().create(WelcomeModel.class);
-        Call<MyResponse<UserInfo>> call = model.verToken();
-        call.enqueue(new Callback<MyResponse<UserInfo>>() {
+        Call<MyResponse<UserInfoResponse>> call = model.verToken();
+        call.enqueue(new Callback<MyResponse<UserInfoResponse>>() {
             @Override
-            public void onResponse(Call<MyResponse<UserInfo>> call, Response<MyResponse<UserInfo>> response) {
-                MyResponse<UserInfo> myResponse = response.body();
+            public void onResponse(Call<MyResponse<UserInfoResponse>> call, Response<MyResponse<UserInfoResponse>> response) {
+                MyResponse<UserInfoResponse> myResponse = response.body();
                 if ((myResponse != null)) {
                     if (myResponse.getCode() != 200) {
                         Toast.makeText(WelcomeActivity.this, myResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -83,7 +78,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<MyResponse<UserInfo>> call, Throwable t) {
+            public void onFailure(Call<MyResponse<UserInfoResponse>> call, Throwable t) {
                 t.printStackTrace();
                 Toast.makeText(WelcomeActivity.this, "网络错误，请稍后再试", Toast.LENGTH_SHORT).show();
                 tag = false;

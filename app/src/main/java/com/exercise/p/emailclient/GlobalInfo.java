@@ -1,13 +1,12 @@
 package com.exercise.p.emailclient;
 
-import android.accounts.Account;
 import android.util.Log;
 
 import com.exercise.p.emailclient.activity.SignActivity;
-import com.exercise.p.emailclient.dto.data.Email;
+import com.exercise.p.emailclient.dto.data.MailBoxResponse;
 import com.exercise.p.emailclient.dto.data.FolderResponse;
 import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
-import com.exercise.p.emailclient.dto.data.UserInfo;
+import com.exercise.p.emailclient.dto.data.UserInfoResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +16,9 @@ import java.util.List;
  */
 
 public class GlobalInfo {
-    public static UserInfo user = null;
+    public static UserInfoResponse user = null;
     public static String authorization = "";
-    public static ArrayList<Email> emails = new ArrayList<>();
+    public static ArrayList<MailBoxResponse> mailBoxResponses = new ArrayList<>();
     public static boolean Main2AddIsChange = false;
     public static boolean Manage2AddIsChange = false;
     public static boolean Main2ManageIsChange = false;
@@ -66,10 +65,10 @@ public class GlobalInfo {
         return 0;
     }
 
-    public static Email getCurrent() {
-        for (Email email : emails) {
-            if (email.getId() == activeId)
-                return email;
+    public static MailBoxResponse getCurrent() {
+        for (MailBoxResponse mailBoxResponse : mailBoxResponses) {
+            if (mailBoxResponse.getId() == activeId)
+                return mailBoxResponse;
         }
         return null;
     }

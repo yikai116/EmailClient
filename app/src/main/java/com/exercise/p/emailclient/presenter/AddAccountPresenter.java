@@ -2,10 +2,9 @@ package com.exercise.p.emailclient.presenter;
 
 import android.util.Log;
 
-import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.activity.SignActivity;
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.param.Email;
+import com.exercise.p.emailclient.dto.param.MailBox;
 import com.exercise.p.emailclient.model.AccountModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;
 import com.exercise.p.emailclient.utils.FormatUtils;
@@ -28,17 +27,17 @@ public class AddAccountPresenter {
         this.view = view;
     }
 
-    public void submitAccount(final Email email){
-        if (!FormatUtils.emailFormat(email.getAccount())) {
+    public void submitAccount(final MailBox mailBox){
+        if (!FormatUtils.emailFormat(mailBox.getAccount())) {
             view.showMessage("邮箱格式错误");
             return;
         }
-        if (email.getPassword().length() < 6) {
+        if (mailBox.getPassword().length() < 6) {
             view.showMessage("密码格式错误");
             return;
         }
         view.showProgress(true);
-        Call<MyResponse> call = model.addAcount(email);
+        Call<MyResponse> call = model.addAcount(mailBox);
         call.enqueue(new Callback<MyResponse>() {
             @Override
             public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {

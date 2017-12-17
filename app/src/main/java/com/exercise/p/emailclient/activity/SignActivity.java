@@ -118,7 +118,7 @@ public class SignActivity extends AppCompatActivity implements SignView {
         editor.putString("token", GlobalInfo.user.getAccessToken());
         editor.apply();
         Intent intent = new Intent();
-        if (GlobalInfo.emails.size() == 0) {
+        if (GlobalInfo.mailBoxResponses.size() == 0) {
             intent.setClass(SignActivity.this, AddAccountActivity.class);
         } else {
             intent.setClass(SignActivity.this, MainActivity.class);

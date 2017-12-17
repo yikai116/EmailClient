@@ -5,7 +5,7 @@ import android.util.Log;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.activity.SignActivity;
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.data.Email;
+import com.exercise.p.emailclient.dto.data.MailBoxResponse;
 import com.exercise.p.emailclient.dto.data.FolderResponse;
 import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
 import com.exercise.p.emailclient.model.AccountModel;
@@ -38,23 +38,23 @@ public class MainPresenter {
     // 得到所有账号
     public void getAccounts() {
         view.showProgress(true);
-        Call<MyResponse<ArrayList<Email>>> accountCall = accountModel.getAccounts();
-        accountCall.enqueue(new Callback<MyResponse<ArrayList<Email>>>() {
+        Call<MyResponse<ArrayList<MailBoxResponse>>> accountCall = accountModel.getAccounts();
+        accountCall.enqueue(new Callback<MyResponse<ArrayList<MailBoxResponse>>>() {
             @Override
-            public void onResponse(Call<MyResponse<ArrayList<Email>>> call, Response<MyResponse<ArrayList<Email>>> response) {
+            public void onResponse(Call<MyResponse<ArrayList<MailBoxResponse>>> call, Response<MyResponse<ArrayList<MailBoxResponse>>> response) {
                 view.showProgress(false);
-                MyResponse<ArrayList<Email>> myResponse = response.body();
+                MyResponse<ArrayList<MailBoxResponse>> myResponse = response.body();
                 if ((myResponse != null)) {
                     if (myResponse.getCode() == 200) {
-                        GlobalInfo.emails.clear();
-                        GlobalInfo.emails.addAll(myResponse.getData());
+                        GlobalInfo.mailBoxResponses.clear();
+                        GlobalInfo.mailBoxResponses.addAll(myResponse.getData());
                         view.updateDrawer();
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<MyResponse<ArrayList<Email>>> call, Throwable t) {
+            public void onFailure(Call<MyResponse<ArrayList<MailBoxResponse>>> call, Throwable t) {
                 t.printStackTrace();
                 view.showMessage("网络连接错误");
                 view.showProgress(false);
@@ -76,9 +76,9 @@ public class MainPresenter {
                     Log.i(SignActivity.TAG, "delete server response: " + response.code());
                     if (response.body().getCode() == 200) {
                         view.showMessage("删除成功");
-                        for (Email email : GlobalInfo.emails) {
-                            if (email.getId() == id) {
-                                GlobalInfo.emails.remove(email);
+                        for (MailBoxResponse mailBoxResponse : GlobalInfo.mailBoxResponses) {
+                            if (mailBoxResponse.getId() == id) {
+                                GlobalInfo.mailBoxResponses.remove(mailBoxResponse);
                                 break;
                             }
                         }

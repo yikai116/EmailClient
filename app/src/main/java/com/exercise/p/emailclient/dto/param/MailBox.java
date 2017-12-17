@@ -4,7 +4,7 @@ package com.exercise.p.emailclient.dto.param;
  * Created by p on 2017/12/12.
  */
 
-public class Email {
+public class MailBox {
     private String account;
     private String password;
     private String smtpServer;
@@ -12,7 +12,7 @@ public class Email {
     private String pop3Server;
     private String pop3Port;
 
-    public Email() {
+    public MailBox() {
         this.account = "";
         this.password = "";
         this.smtpServer = "";

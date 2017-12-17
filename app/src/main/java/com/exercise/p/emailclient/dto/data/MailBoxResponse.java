@@ -4,7 +4,7 @@ package com.exercise.p.emailclient.dto.data;
  * Created by p on 2017/12/12.
  */
 
-public class Email {
+public class MailBoxResponse {
     private int id;
     private String account;
     private String password;
@@ -15,7 +15,7 @@ public class Email {
     private String alias;
 
 
-    public Email() {
+    public MailBoxResponse() {
         this.account = "";
         this.password = "";
         this.smtpServer = "";

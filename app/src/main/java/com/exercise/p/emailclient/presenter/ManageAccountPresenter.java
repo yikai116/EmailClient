@@ -5,7 +5,7 @@ import android.util.Log;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.activity.SignActivity;
 import com.exercise.p.emailclient.dto.MyResponse;
-import com.exercise.p.emailclient.dto.data.Email;
+import com.exercise.p.emailclient.dto.data.MailBoxResponse;
 import com.exercise.p.emailclient.model.AccountModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;
 import com.exercise.p.emailclient.view.ManageAccountView;
@@ -30,11 +30,11 @@ public class ManageAccountPresenter {
         accountModel = RetrofitInstance.getRetrofitWithToken().create(AccountModel.class);
     }
 
-    public void delete(ArrayList<Email> accounts) {
+    public void delete(ArrayList<MailBoxResponse> boxResponses) {
         view.showProgress(true);
         List<Integer> list = new ArrayList<>();
-        for (Email email : accounts) {
-            list.add(email.getId());
+        for (MailBoxResponse mailBoxResponse : boxResponses) {
+            list.add(mailBoxResponse.getId());
         }
         Call<MyResponse> call = accountModel.deleteAcount(list);
         call.enqueue(new Callback<MyResponse>() {

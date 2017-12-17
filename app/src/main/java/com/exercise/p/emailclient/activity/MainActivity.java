@@ -24,7 +24,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
-import com.exercise.p.emailclient.dto.data.Email;
+import com.exercise.p.emailclient.dto.data.MailBoxResponse;
 import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
 import com.exercise.p.emailclient.presenter.MainPresenter;
 import com.exercise.p.emailclient.utils.MailItemAdapter;
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
             activeId = (int) headerResult.getActiveProfile().getIdentifier();
         }
         headerResult.clear();
-        if (GlobalInfo.emails.size() == 0) {
+        if (GlobalInfo.mailBoxResponses.size() == 0) {
             toAddAccountActivity();
             return;
         }
@@ -291,12 +291,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
                         .withIcon(R.drawable.icon_side_add_account)
                         .withIdentifier(SIDE_ADD_COUNT)
         );
-        for (int i = 0; i < GlobalInfo.emails.size(); i++) {
-            Email email = GlobalInfo.emails.get(i);
+        for (int i = 0; i < GlobalInfo.mailBoxResponses.size(); i++) {
+            MailBoxResponse mailBoxResponse = GlobalInfo.mailBoxResponses.get(i);
             headerResult.addProfile(new ProfileDrawerItem().withName(GlobalInfo.user.getUserName())
-                    .withEmail(email.getAccount())
+                    .withEmail(mailBoxResponse.getAccount())
                     .withIcon(R.drawable.icon_side_avatar)
-                    .withIdentifier(email.getId()), 0);
+                    .withIdentifier(mailBoxResponse.getId()), 0);
         }
 
         if (headerResult.getActiveProfile().getIdentifier() != activeId) {

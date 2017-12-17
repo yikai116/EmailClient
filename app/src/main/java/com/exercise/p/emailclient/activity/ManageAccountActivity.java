@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
-import com.exercise.p.emailclient.dto.data.Email;
+import com.exercise.p.emailclient.dto.data.MailBoxResponse;
 import com.exercise.p.emailclient.presenter.ManageAccountPresenter;
 import com.exercise.p.emailclient.utils.AccountAdapter;
 import com.exercise.p.emailclient.view.ManageAccountView;
@@ -33,9 +33,9 @@ public class ManageAccountActivity extends AppCompatActivity implements ManageAc
     Toolbar manageAccountToolbar;
     @BindView(R.id.manage_account_recycler_view)
     RecyclerView manageAccountRecyclerView;
-    ArrayList<Email> accounts = GlobalInfo.emails;
+    ArrayList<MailBoxResponse> accounts = GlobalInfo.mailBoxResponses;
 
-    ArrayList<Email> account_del = new ArrayList<>();
+    ArrayList<MailBoxResponse> account_del = new ArrayList<>();
     ArrayList<View> views = new ArrayList<>();
 
     ActionMode actionMode;

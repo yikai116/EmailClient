@@ -10,20 +10,20 @@ import android.widget.TextView;
 
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.activity.SignActivity;
-import com.exercise.p.emailclient.dto.data.Email;
+import com.exercise.p.emailclient.dto.data.MailBoxResponse;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHolder> {
 
-    private ArrayList<Email> accounts;
+    private ArrayList<MailBoxResponse> boxes;
 
     private ArrayList<Boolean> isChoose;
     private Context context;
 
-    public AccountAdapter(ArrayList<Email> data, Context context) {
-        accounts = data;
+    public AccountAdapter(ArrayList<MailBoxResponse> data, Context context) {
+        boxes = data;
         this.context = context;
         isChoose = new ArrayList<>();
         for (int i = 0; i< data.size();i++){
@@ -31,16 +31,16 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHo
         }
     }
 
-    public void addAccount(Email email){
-        this.accounts.add(email);
+    public void addBox(MailBoxResponse mailBoxResponse){
+        this.boxes.add(mailBoxResponse);
         this.isChoose.add(false);
     }
 
-    public void removeAll(Collection<?> accounts) {
-        for (Object o : accounts) {
-            this.notifyItemRemoved(this.accounts.indexOf(o));
-            this.isChoose.remove(this.accounts.indexOf(o));
-            this.accounts.remove(o);
+    public void removeAll(Collection<?> boxes) {
+        for (Object o : boxes) {
+            this.notifyItemRemoved(this.boxes.indexOf(o));
+            this.isChoose.remove(this.boxes.indexOf(o));
+            this.boxes.remove(o);
         }
     }
 
@@ -50,7 +50,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHo
 
     public void setAllChoose(boolean choose){
         isChoose = new ArrayList<>();
-        for (int i = 0; i< accounts.size();i++){
+        for (int i = 0; i< boxes.size(); i++){
             isChoose.add(choose);
         }
     }
@@ -66,7 +66,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHo
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Log.i(SignActivity.TAG,"bind " + position + " " + isChoose.get(position));
-        holder.accountText.setText(accounts.get(position).getAccount());
+        holder.accountText.setText(boxes.get(position).getAccount());
         holder.itemView.setBackgroundColor(isChoose.get(position)?
                 context.getResources().getColor(R.color.colorSelected):0);
         if (mOnItemClickListener != null) {
@@ -91,7 +91,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return accounts.size();
+        return boxes.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
