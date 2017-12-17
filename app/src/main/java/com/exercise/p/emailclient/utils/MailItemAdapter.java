@@ -1,7 +1,9 @@
 package com.exercise.p.emailclient.utils;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.activity.SignActivity;
 import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
@@ -73,17 +76,32 @@ public class MailItemAdapter extends RecyclerView.Adapter<MailItemAdapter.MyView
         if (isChoose.get(position)) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.colorSelected));
             float scale = context.getResources().getDisplayMetrics().density;
-            int dpAsPixels = (int) (8*scale + 0.5f);
-            holder.avatar.setPadding(dpAsPixels,dpAsPixels,dpAsPixels,dpAsPixels);
+            int dpAsPixels = (int) (8 * scale + 0.5f);
+            holder.avatar.setPadding(dpAsPixels, dpAsPixels, dpAsPixels, dpAsPixels);
             holder.avatar.setImageResource(R.drawable.icon_avatar_selected);
         } else {
             holder.itemView.setBackgroundColor(0);
-            holder.avatar.setPadding(0,0,0,0);
+            holder.avatar.setPadding(0, 0, 0, 0);
             holder.avatar.setImageResource(R.drawable.icon_side_avatar);
         }
-        String[] temp = mail.getFrom().split(" ");
-        holder.fromText.setText(temp[0] == null ? mail.getFrom() : temp[0]);
-        holder.subjectText.setText(mail.getSubject());
+        ArrayList<SimpleAccount> fromList = SimpleAccount.toList(mail.getFrom());
+        StringBuilder fromStr = new StringBuilder("");
+        for (int i = 0; i < fromList.size(); i++) {
+            fromStr.append(fromList.get(i).getName() == null
+                    ? fromList.get(i).getEmailAddr() : fromList.get(i).getName());
+            if (i != fromList.size() - 1)
+                fromStr.append(",");
+        }
+        holder.fromText.setText(fromStr);
+        if (mail.isSeen())
+            holder.subjectText.setText(mail.getSubject());
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                holder.subjectText.setText(Html.fromHtml(
+                        "<b>" + mail.getSubject() + "</b>", Html.FROM_HTML_MODE_COMPACT));
+            else
+                holder.subjectText.setText(Html.fromHtml("<b>" + mail.getSubject() + "</b>"));
+        }
         holder.textText.setText(mail.getTextBody());
         holder.dateText.setText(new SimpleDateFormat("MM月dd日", Locale.getDefault()).format(mail.getSendDate()));
 

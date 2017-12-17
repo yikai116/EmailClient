@@ -18,11 +18,16 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.databinding.ActivitySendBinding;
+import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
 import com.exercise.p.emailclient.dto.param.Mail;
 import com.exercise.p.emailclient.presenter.SendPresenter;
+import com.exercise.p.emailclient.utils.SimpleAccount;
 import com.exercise.p.emailclient.view.SendView;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,8 +53,32 @@ public class SendActivity extends AppCompatActivity implements SendView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send);
+
+        String folderType = getIntent().getStringExtra("folderType");
+        int position = getIntent().getIntExtra("position", -1);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_send);
         mail = new Mail();
+        if (folderType != null && position != -1) {
+            int action = getIntent().getIntExtra("action", DetailActivity.REPLY);
+            Log.i(SignActivity.TAG, "action: " + action);
+            MailPreviewResponse temp = GlobalInfo.getMailsByBox(folderType).get(position);
+            if (action == DetailActivity.REPLY) {
+                mail.setSubject("Re：" + temp.getSubject());
+                ArrayList<SimpleAccount> accounts = SimpleAccount.toList(temp.getFrom());
+                StringBuilder stringBuilder = new StringBuilder("");
+                for (int i = 0; i < accounts.size(); i++) {
+                    stringBuilder.append(accounts.get(i).getEmailAddr());
+                    stringBuilder.append(",");
+                }
+                mail.setTo(stringBuilder.toString());
+            } else {
+                mail.setSubject(temp.getSubject());
+                if (temp.getHtmlBody() == null || temp.getHtmlBody().equals(""))
+                    mail.setHtmlBody(temp.getTextBody());
+                else
+                    mail.setHtmlBody(temp.getTextBody());
+            }
+        }
         binding.setMail(mail);
         binding.setShow(false);
         ButterKnife.bind(this);
@@ -78,7 +107,7 @@ public class SendActivity extends AppCompatActivity implements SendView {
                     mail.setTo(mail.getTo().trim());
                     mail.setSubject(mail.getSubject().trim());
                     binding.setMail(mail);
-                    Log.i(SignActivity.TAG,"html : " + knife.toHtml());
+                    Log.i(SignActivity.TAG, "html : " + knife.toHtml());
                     mail.setHtmlBody(knife.toHtml());
                     presenter.send(mail);
                 }
@@ -125,7 +154,7 @@ public class SendActivity extends AppCompatActivity implements SendView {
         binding.setShow(hasFocus);
     }
 
-    private void initTool(){
+    private void initTool() {
         setupBold();
         setupItalic();
         setupUnderline();
@@ -175,7 +204,7 @@ public class SendActivity extends AppCompatActivity implements SendView {
     }
 
     private void setupUnderline() {
-        ImageButton underline =  findViewById(R.id.underline);
+        ImageButton underline = findViewById(R.id.underline);
 
         underline.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,7 +223,7 @@ public class SendActivity extends AppCompatActivity implements SendView {
     }
 
     private void setupStrikethrough() {
-        ImageButton strikethrough =  findViewById(R.id.strikethrough);
+        ImageButton strikethrough = findViewById(R.id.strikethrough);
 
         strikethrough.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,7 +242,7 @@ public class SendActivity extends AppCompatActivity implements SendView {
     }
 
     private void setupBullet() {
-        ImageButton bullet =  findViewById(R.id.bullet);
+        ImageButton bullet = findViewById(R.id.bullet);
 
         bullet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,7 +262,7 @@ public class SendActivity extends AppCompatActivity implements SendView {
     }
 
     private void setupQuote() {
-        ImageButton quote =  findViewById(R.id.quote);
+        ImageButton quote = findViewById(R.id.quote);
 
         quote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,7 +281,7 @@ public class SendActivity extends AppCompatActivity implements SendView {
     }
 
     private void setupLink() {
-        ImageButton link =  findViewById(R.id.link);
+        ImageButton link = findViewById(R.id.link);
 
         link.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,7 +300,7 @@ public class SendActivity extends AppCompatActivity implements SendView {
     }
 
     private void setupClear() {
-        ImageButton clear =  findViewById(R.id.clear);
+        ImageButton clear = findViewById(R.id.clear);
 
         clear.setOnClickListener(new View.OnClickListener() {
             @Override

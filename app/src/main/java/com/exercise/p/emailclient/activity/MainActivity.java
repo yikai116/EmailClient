@@ -154,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         mainPresenter = new MainPresenter(this);
         initToolBar();
         initDrawer();
@@ -382,7 +381,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     add2Del(view, position);
                 }
             } else {
-                startActivity(new Intent(MainActivity.this, DetailActivity.class));
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra("folderType",getSelectTag());
+                intent.putExtra("position",position);
+                startActivity(intent);
             }
         }
 

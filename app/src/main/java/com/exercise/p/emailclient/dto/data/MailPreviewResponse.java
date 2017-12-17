@@ -27,6 +27,8 @@ public class MailPreviewResponse {
     // html
     private String htmlBody;
 
+    private boolean seen;
+
     private String to;
 
     private String contentType;
@@ -97,6 +99,13 @@ public class MailPreviewResponse {
         this.sendDate = sendDate;
     }
 
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
+    }
 
     @Override
     public String toString() {

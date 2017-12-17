@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,26 +22,203 @@
             android:translationZ="2dp"
             app:title="邮箱详情" />
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fillViewport="true">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/detail_subject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="90dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:textSize="20sp"
+                tools:text="这是主题" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/colorDivider" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:minHeight="60dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/detail_subject"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
-                    android:minHeight="90dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp">
+
+                    <ImageView
+                        android:id="@+id/detail_avatar"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:gravity="center"
+                        android:src="@drawable/icon_side_avatar" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/mail_detail_from"
+                            style="@style/Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:singleLine="true"
+                            android:textColor="@android:color/black"
+                            android:textSize="13sp"
+                            tools:text="123456@qq.com" />
+
+                        <TextView
+                            android:id="@+id/mail_detail_to"
+                            style="@style/Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:maxLines="1"
+                            android:textSize="13sp"
+                            tools:text="123456@qq.com" />
+
+                        <TextView
+                            android:id="@+id/mail_detail_date"
+                            style="@style/Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:maxLines="1"
+                            android:textSize="13sp"
+                            tools:text="昨天 查看详情" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="65dp"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="60dp"
+                    android:orientation="vertical"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
-                    android:text="这是主题" />
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="发件人："
+                            android:textColor="@color/colorTextGrey"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/info_detail_from"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:gravity="start"
+                            android:textColor="@color/colorTextGrey"
+                            android:textSize="12sp"
+                            tools:text="yyyyk \n1164323901@qq.com" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="收件人："
+                            android:textColor="@color/colorTextGrey"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/info_detail_to"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:gravity="start"
+                            android:textColor="@color/colorTextGrey"
+                            android:textSize="12sp"
+                            tools:text="yyyyk \n1164323901@qq.com" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="日期："
+                            android:textColor="@color/colorTextGrey"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/info_detail_date"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:gravity="start"
+                            android:textColor="@color/colorTextGrey"
+                            android:textSize="12sp"
+                            tools:text="2017年12月15日 20:50" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <WebView
+                        android:id="@+id/mail_detail_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="15dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        tools:text="这是正文" />
+
+                    <ProgressBar
+                        android:id="@+id/processBar"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_centerInParent="true"
+                        android:indeterminateTint="@color/colorTheme"
+                        android:progressBackgroundTint="@color/colorTheme"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -48,166 +227,46 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:minHeight="60dp"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/detail_avatar"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:gravity="center"
-                            android:src="@drawable/icon_side_avatar" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="15dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/mail_detail_from"
-                                style="@style/Text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:gravity="center_vertical"
-                                android:singleLine="true"
-                                android:text="123456@qq.com"
-                                android:textColor="@android:color/black" />
-
-                            <TextView
-                                android:id="@+id/mail_detail_to"
-                                style="@style/Text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:ellipsize="end"
-                                android:gravity="center_vertical"
-                                android:maxLines="1"
-                                android:text="123456@qq.com" />
-
-                            <TextView
-                                android:id="@+id/mail_detail_date"
-                                style="@style/Text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:gravity="center_vertical"
-                                android:maxLines="1"
-                                android:text="昨天 查看详情" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/detail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="65dp"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:minHeight="60dp"
-                        android:orientation="vertical"
-                        android:visibility="visible">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="发件人：" />
-
-                            <TextView
-                                android:id="@+id/info_detail_from"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="3"
-                                android:gravity="start"
-                                android:text="yyyyk \n1164323901@qq.com" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="收件人：" />
-
-                            <TextView
-                                android:id="@+id/info_detail_to"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="3"
-                                android:gravity="start"
-                                android:text="yyyyk \n1164323901@qq.com" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="日期：" />
-
-                            <TextView
-                                android:id="@+id/info_detail_date"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="3"
-                                android:gravity="start"
-                                android:text="2017年12月15日 20:50" />
-                        </LinearLayout>
-                    </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:minHeight="80dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_weight="1"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:text="这是正文" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/colorDivider" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                        android:id="@+id/detail_reply"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:minHeight="80dp"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp" />
-                </LinearLayout>
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/icon_detail_reply"
+                        android:gravity="center"
+                        android:text="回复"
+                        android:textColor="@color/colorTextGrey" />
 
+                    <TextView
+                        android:id="@+id/detail_reply_all"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/icon_detail_reply_all"
+                        android:gravity="center"
+                        android:text="回复全部"
+                        android:textColor="@color/colorTextGrey" />
+
+                    <TextView
+                        android:id="@+id/detail_forward"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableTop="@drawable/icon_detail_forward"
+                        android:gravity="center"
+                        android:text="转发"
+                        android:textColor="@color/colorTextGrey" />
+                </LinearLayout>
             </LinearLayout>
 
-        </ScrollView>
+        </LinearLayout>
 
 
     </LinearLayout>

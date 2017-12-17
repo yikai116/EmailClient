@@ -65,6 +65,7 @@ public class GlobalInfo {
         return 0;
     }
 
+    // 得到当前选择的邮箱信息
     public static MailBoxResponse getCurrent() {
         for (MailBoxResponse mailBoxResponse : mailBoxResponses) {
             if (mailBoxResponse.getId() == activeId)
