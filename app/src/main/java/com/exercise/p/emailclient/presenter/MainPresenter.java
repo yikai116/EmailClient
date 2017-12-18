@@ -12,8 +12,10 @@ import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
 import com.exercise.p.emailclient.model.AccountModel;
 import com.exercise.p.emailclient.model.EmailModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;
+import com.exercise.p.emailclient.utils.MemoryAccess;
 import com.exercise.p.emailclient.view.MainView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +52,17 @@ public class MainPresenter {
                         GlobalInfo.mailBoxResponses.clear();
                         GlobalInfo.mailBoxResponses.addAll(myResponse.getData());
                         view.updateDrawer();
+                        FolderResponse folder = new FolderResponse();
+                        folder.setId(-100);
+                        folder.setAlias("caogaoxiang");
+                        folder.setFolderType("DRAFT");
+                        try {
+                            folder.setMailList(MemoryAccess.readCourseFromSD());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            view.showMessage("内存读取错误");
+                        }
+                        GlobalInfo.allMail.add(folder);
                     }
                 }
             }
