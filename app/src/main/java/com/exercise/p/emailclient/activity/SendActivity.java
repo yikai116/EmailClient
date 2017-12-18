@@ -32,6 +32,7 @@ import com.exercise.p.emailclient.view.SendView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +54,7 @@ public class SendActivity extends AppCompatActivity implements SendView {
     Mail mail;
     @BindView(R.id.knife)
     KnifeText knife;
+    MailPreviewResponse temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,21 @@ public class SendActivity extends AppCompatActivity implements SendView {
         sendToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    if (temp == null){
+                        temp = new MailPreviewResponse();
+                    }
+                    temp.setContentType(mail.getContentType());
+                    temp.setFrom(mail.getFrom());
+                    temp.setTo(mail.getTo().trim());
+                    temp.setSubject(mail.getSubject().trim());
+                    temp.setHtmlBody(knife.toHtml());
+                    temp.setSendDate(new Date().getTime());
+                    GlobalInfo.getMailsByBox("DRAFT").add(temp);
+                    MemoryAccess.saveDraftToSD();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 SendActivity.this.finish();
             }
         });
@@ -113,17 +130,8 @@ public class SendActivity extends AppCompatActivity implements SendView {
                     mail.setTo(mail.getTo().trim());
                     mail.setSubject(mail.getSubject().trim());
                     binding.setMail(mail);
-                    Log.i(SignActivity.TAG, "html : " + knife.toHtml());
                     mail.setHtmlBody(knife.toHtml());
                     presenter.send(mail);
-                }
-                if (item.getItemId() == R.id.action_save) {
-//                    try {
-//                        MemoryAccess.saveCourseToSD();
-//                        showMessage("存放成功");
-//                    } catch (IOException e) {
-//                        showMessage("存放失败");
-//                    }
                 }
                 return false;
             }
@@ -134,6 +142,11 @@ public class SendActivity extends AppCompatActivity implements SendView {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_send, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
     }
 
     @Override
@@ -164,13 +177,11 @@ public class SendActivity extends AppCompatActivity implements SendView {
 
     @OnFocusChange(R.id.knife)
     public void OnTextFocusChange(boolean hasFocus) {
-        Log.i(SignActivity.TAG, "hasFocus: " + hasFocus);
         binding.setShow(hasFocus);
     }
 
     @OnClick(R.id.send_from)
     public void OnSendFromClick() {
-        Log.i(SignActivity.TAG, "send activity click from");
         ArrayList<String> accounts = new ArrayList<>();
         for (MailBoxResponse box : GlobalInfo.mailBoxResponses) {
             accounts.add(box.getAccount());
@@ -186,7 +197,6 @@ public class SendActivity extends AppCompatActivity implements SendView {
                 .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        Log.i(SignActivity.TAG, "dialog callback called -- text:: " + text);
                         if (text != null && text.length() > 0) {
                             mail.setFrom((String) text);
                             binding.setMail(mail);

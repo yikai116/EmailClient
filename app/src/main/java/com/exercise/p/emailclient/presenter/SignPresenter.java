@@ -76,8 +76,14 @@ public class SignPresenter {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 cookie = response.headers().get("Set-Cookie");
-                Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
-                view.showCheckImg(bitmap);
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+                    view.showCheckImg(bitmap);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    view.showMessage("网络错误，请稍后再试");
+                }
             }
 
             @Override

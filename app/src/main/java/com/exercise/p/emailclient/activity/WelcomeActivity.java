@@ -53,7 +53,6 @@ public class WelcomeActivity extends AppCompatActivity {
         String token = preferences.getString("token", "");
         GlobalInfo.authorization = "Bearer " + token;
         assert GlobalInfo.authorization != null;
-        Log.i(SignActivity.TAG, "Welcome GlobalInfo.authorization: " + GlobalInfo.authorization);
         authToken();
     }
 

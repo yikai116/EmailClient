@@ -1,6 +1,5 @@
 package com.exercise.p.emailclient.presenter;
 
-import android.os.Handler;
 import android.util.Log;
 
 import com.exercise.p.emailclient.GlobalInfo;
@@ -52,17 +51,6 @@ public class MainPresenter {
                         GlobalInfo.mailBoxResponses.clear();
                         GlobalInfo.mailBoxResponses.addAll(myResponse.getData());
                         view.updateDrawer();
-                        FolderResponse folder = new FolderResponse();
-                        folder.setId(-100);
-                        folder.setAlias("caogaoxiang");
-                        folder.setFolderType("DRAFT");
-                        try {
-                            folder.setMailList(MemoryAccess.readCourseFromSD());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            view.showMessage("内存读取错误");
-                        }
-                        GlobalInfo.allMail.add(folder);
                     }
                 }
             }
@@ -132,6 +120,17 @@ public class MainPresenter {
                         for (FolderResponse folderResponse : GlobalInfo.allMail) {
                             updateEmail(id, folderResponse.getId(), boxType);
                         }
+                        FolderResponse folder = new FolderResponse();
+                        folder.setId(-100);
+                        folder.setAlias("caogaoxiang");
+                        folder.setFolderType("DRAFT");
+                        try {
+                            folder.setMailList(MemoryAccess.readDraftFromSD());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            view.showMessage("内存读取错误");
+                        }
+                        GlobalInfo.allMail.add(folder);
                     } else {
                         view.showMessage("抱歉，发生错误");
                     }

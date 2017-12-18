@@ -21,11 +21,12 @@ import java.util.ArrayList;
  */
 
 public class MemoryAccess {
-    public static void saveCourseToSD(ArrayList<Mail> mails) throws IOException {
+    public static void saveDraftToSD() throws IOException {
         File sdDir = Environment.getExternalStorageDirectory();
         String myPath = sdDir.getPath() + "/Email";
         File myDir = new File(myPath);
         if (!myDir.exists()) {
+
             myDir.mkdirs();
         }
         myPath = myDir.getPath() + "/" + GlobalInfo.activeId + ".txt";
@@ -34,26 +35,32 @@ public class MemoryAccess {
             myDir.createNewFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(myDir.getPath()));
 
-        for (Mail mail : mails) {
-//            Log.i("Save",c.toString());
+        for (MailPreviewResponse mail : GlobalInfo.getMailsByBox("DRAFT")) {
             writer.write(mail.toString() + "\n");
         }
         writer.close();
     }
 
-    public static ArrayList<MailPreviewResponse> readCourseFromSD() throws IOException {
-        Log.i(SignActivity.TAG,"read from SD id" + GlobalInfo.activeId);
-        ArrayList<MailPreviewResponse> courses = new ArrayList<>();
+    public static ArrayList<MailPreviewResponse> readDraftFromSD() throws IOException {
+        ArrayList<MailPreviewResponse> mails = new ArrayList<>();
         File sdDir = Environment.getExternalStorageDirectory();
-        String myPath = sdDir.getPath() + "/Email/" + GlobalInfo.activeId + ".txt";
-        File myDir = new File(myPath);
-        BufferedReader reader = new BufferedReader(new FileReader(myDir.getPath()));
 
+        String myPath = sdDir.getPath() + "/Email";
+        File myDir = new File(myPath);
+        if (!myDir.exists()) {
+            boolean x = myDir.mkdirs();
+            Log.i(SignActivity.TAG,"mdir reslut " + x);
+        }
+        myPath = myDir.getPath() + "/" + GlobalInfo.activeId + ".txt";
+        File file = new File(myPath);
+        if (!file.exists())
+            file.createNewFile();
+        BufferedReader reader = new BufferedReader(new FileReader(file));
         for (String line = reader.readLine(); line != null && (!line.equals("")); ) {
-            courses.add(MailPreviewResponse.toObject(line));
+            mails.add(MailPreviewResponse.toObject(line));
             line = reader.readLine();
         }
         reader.close();
-        return courses;
+        return mails;
     }
 }

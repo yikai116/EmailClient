@@ -1,5 +1,6 @@
 package com.exercise.p.emailclient.dto.data;
 
+import com.exercise.p.emailclient.dto.param.Mail;
 import com.google.gson.Gson;
 
 public class MailPreviewResponse {
@@ -125,4 +126,5 @@ public class MailPreviewResponse {
     public static MailPreviewResponse toObject(String s){
         return new Gson().fromJson(s,MailPreviewResponse.class);
     }
+
 }
