@@ -2,6 +2,7 @@ package com.exercise.p.emailclient.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -84,6 +85,11 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
     public void showProgress(boolean show) {
         if (materialDialog == null) {
             materialDialog = new MaterialDialog.Builder(this)
+                    .backgroundColor(Color.WHITE)
+                    .contentColor(getResources().getColor(R.color.colorTextBlack))
+                    .titleColor(getResources().getColor(R.color.colorTextBlack))
+                    .itemsColor(getResources().getColor(R.color.colorTextBlack))
+                    .widgetColor(getResources().getColor(R.color.colorTextBlack))
                     .title("请稍后")
                     .content("正在提交")
                     .progress(true, 0)

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -127,6 +128,11 @@ public class SignActivity extends AppCompatActivity implements SignView {
     public void showProgress(boolean show) {
         if (materialDialog == null) {
             materialDialog = new MaterialDialog.Builder(this)
+                    .backgroundColor(Color.WHITE)
+                    .contentColor(getResources().getColor(R.color.colorTextBlack))
+                    .titleColor(getResources().getColor(R.color.colorTextBlack))
+                    .itemsColor(getResources().getColor(R.color.colorTextBlack))
+                    .widgetColor(getResources().getColor(R.color.colorTextBlack))
                     .title("请稍后")
                     .content("正在提交")
                     .progress(true, 0)

@@ -134,6 +134,11 @@ public class ManageAccountActivity extends AppCompatActivity implements ManageAc
     public void showProgress(boolean show) {
         if (materialDialog == null) {
             materialDialog = new MaterialDialog.Builder(this)
+                    .backgroundColor(Color.WHITE)
+                    .contentColor(getResources().getColor(R.color.colorTextBlack))
+                    .titleColor(getResources().getColor(R.color.colorTextBlack))
+                    .itemsColor(getResources().getColor(R.color.colorTextBlack))
+                    .widgetColor(getResources().getColor(R.color.colorTextBlack))
                     .title("请稍后")
                     .content("正在提交")
                     .progress(true, 0)

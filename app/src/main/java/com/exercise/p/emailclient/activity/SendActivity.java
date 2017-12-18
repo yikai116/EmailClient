@@ -72,9 +72,9 @@ public class SendActivity extends AppCompatActivity implements SendView {
         initTool();
 
         if (folderType != null && position != -1) {
-            int action = getIntent().getIntExtra("action", DetailActivity.REPLY);
+            int action = getIntent().getIntExtra("action", DetailActivity.FORWARD);
             Log.i(SignActivity.TAG, "action: " + action);
-            MailPreviewResponse temp = GlobalInfo.getMailsByBox(folderType).get(position);
+            temp = GlobalInfo.getMailsByBox(folderType).get(position);
             if (action == DetailActivity.REPLY) {
                 mail.setSubject("Re:" + temp.getSubject());
                 ArrayList<SimpleAccount> accounts = SimpleAccount.toList(temp.getFrom());
@@ -104,22 +104,7 @@ public class SendActivity extends AppCompatActivity implements SendView {
         sendToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    if (temp == null){
-                        temp = new MailPreviewResponse();
-                    }
-                    temp.setContentType(mail.getContentType());
-                    temp.setFrom(mail.getFrom());
-                    temp.setTo(mail.getTo().trim());
-                    temp.setSubject(mail.getSubject().trim());
-                    temp.setHtmlBody(knife.toHtml());
-                    temp.setSendDate(new Date().getTime());
-                    GlobalInfo.getMailsByBox("DRAFT").add(temp);
-                    MemoryAccess.saveDraftToSD();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                SendActivity.this.finish();
+                onBackPressed();
             }
         });
         assert getSupportActionBar() != null;
@@ -147,6 +132,46 @@ public class SendActivity extends AppCompatActivity implements SendView {
     @Override
     public void finish() {
         super.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.i(SignActivity.TAG, "back pressed");
+        new MaterialDialog.Builder(SendActivity.this)
+                .backgroundColor(Color.WHITE)
+                .contentColor(getResources().getColor(R.color.colorTextBlack))
+                .titleColor(getResources().getColor(R.color.colorTextBlack))
+                .itemsColor(getResources().getColor(R.color.colorTextBlack))
+                .widgetColor(getResources().getColor(R.color.colorTextBlack))
+                .title("提示")
+                .content("是否进行保存？")
+                .positiveText("保存")
+                .negativeText("不")
+                .onAny(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        if (DialogAction.POSITIVE == which) {
+                            if (!mail.getTo().equals("") || !mail.getSubject().equals("") || !mail.getHtmlBody().equals("")) {
+                                try {
+                                    if (temp == null) {
+                                        temp = new MailPreviewResponse();
+                                    }
+                                    temp.setContentType(mail.getContentType());
+                                    temp.setFrom(mail.getFrom());
+                                    temp.setTo(mail.getTo().trim());
+                                    temp.setSubject(mail.getSubject().trim());
+                                    temp.setHtmlBody(knife.toHtml());
+                                    temp.setSendDate(new Date().getTime());
+                                    GlobalInfo.getMailsByBox("DRAFT").add(temp);
+                                    MemoryAccess.saveDraftToSD();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        SendActivity.super.onBackPressed();
+                    }
+                }).show();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.exercise.p.emailclient.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -261,6 +262,11 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
     public void showProgress(boolean show) {
         if (materialDialog == null) {
             materialDialog = new MaterialDialog.Builder(this)
+                    .backgroundColor(Color.WHITE)
+                    .contentColor(getResources().getColor(R.color.colorTextBlack))
+                    .titleColor(getResources().getColor(R.color.colorTextBlack))
+                    .itemsColor(getResources().getColor(R.color.colorTextBlack))
+                    .widgetColor(getResources().getColor(R.color.colorTextBlack))
                     .title("请稍后")
                     .content("正在提交")
                     .progress(true, 0)

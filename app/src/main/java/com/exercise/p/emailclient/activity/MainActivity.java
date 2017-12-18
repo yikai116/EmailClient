@@ -187,6 +187,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     @Override
                     public boolean onProfileLongClick(View view, final IProfile profile, boolean current) {
                         new MaterialDialog.Builder(MainActivity.this)
+                                .backgroundColor(Color.WHITE)
+                                .contentColor(getResources().getColor(R.color.colorTextBlack))
+                                .titleColor(getResources().getColor(R.color.colorTextBlack))
+                                .itemsColor(getResources().getColor(R.color.colorTextBlack))
+                                .widgetColor(getResources().getColor(R.color.colorTextBlack))
                                 .title("提示")
                                 .content("确定删除该账号？")
                                 .positiveText("确定")
@@ -252,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         int temp = (int) drawerItem.getIdentifier();
-                        switch ((int) drawerItem.getIdentifier()) {
+                        switch (temp) {
                             case SIDE_SETTING:
                                 temp = side_select;
                                 result.setSelection(side_select, false);
@@ -265,12 +270,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
                                 startActivity(intent);
                                 break;
                             default:
+                                side_select = temp;
                                 Log.i(SignActivity.TAG, "click tag： " + (String) drawerItem.getTag());
                                 setData(GlobalInfo.getMailsByBox((String) drawerItem.getTag()));
                                 PrimaryDrawerItem primaryDrawerItem = (PrimaryDrawerItem) drawerItem;
                                 mainToolbar.setTitle(primaryDrawerItem.getName().toString());
                         }
-                        side_select = temp;
                         return false;
                     }
                 })
@@ -321,6 +326,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void showProgress(boolean show) {
         if (materialDialog == null) {
             materialDialog = new MaterialDialog.Builder(this)
+                    .backgroundColor(Color.WHITE)
+                    .contentColor(getResources().getColor(R.color.colorTextBlack))
+                    .titleColor(getResources().getColor(R.color.colorTextBlack))
+                    .itemsColor(getResources().getColor(R.color.colorTextBlack))
+                    .widgetColor(getResources().getColor(R.color.colorTextBlack))
                     .title("请稍后")
                     .content("正在提交")
                     .progress(true, 0)
@@ -342,10 +352,15 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public void setData(ArrayList<MailPreviewResponse> mails) {
         if (adapter == null) {
             adapter = new MailItemAdapter(mails, MainActivity.this);
-            adapter.setOnItemClickListener(mOnItemClickListener);
             mainRecyclerView.setAdapter(adapter);
         } else
             adapter.setMails(mails);
+        if (side_select == SIDE_DRAFT){
+            adapter.setOnItemClickListener(mDraftOnItemClickListener);
+        }
+        else {
+            adapter.setOnItemClickListener(mOnItemClickListener);
+        }
     }
 
     @Override
@@ -387,6 +402,32 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 }
             } else {
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra("folderType", getSelectTag());
+                intent.putExtra("position", position);
+                startActivityForResult(intent, CODE);
+            }
+        }
+
+        @Override
+        public void onItemLongClick(View view, int position) {
+            Log.i(SignActivity.TAG, "long click " + position);
+            if (actionMode == null)
+                startSupportActionMode(mActionModeCallback);
+            add2Del(view, position);
+        }
+    };
+    private MailItemAdapter.OnItemClickListener mDraftOnItemClickListener = new MailItemAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(View view, int position) {
+            Log.i(SignActivity.TAG, "click " + position);
+            if (actionMode != null) {
+                if (mail_del.contains(GlobalInfo.getMailsByBox(getSelectTag()).get(position))) {
+                    removeFromDel(view, position);
+                } else {
+                    add2Del(view, position);
+                }
+            } else {
+                Intent intent = new Intent(MainActivity.this, SendActivity.class);
                 intent.putExtra("folderType", getSelectTag());
                 intent.putExtra("position", position);
                 startActivityForResult(intent, CODE);
