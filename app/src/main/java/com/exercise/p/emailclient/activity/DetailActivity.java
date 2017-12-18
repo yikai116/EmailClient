@@ -138,9 +138,17 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
                     list.add(mail);
                     presenter.deleteEmails(list, GlobalInfo.getFolderId(folderType));
                 }
-                if (item.getItemId() == R.id.action_read) {
-                    Log.i(SignActivity.TAG, "detail activity click read");
+                else {
                     presenter.markAsSeen(GlobalInfo.getFolderId(folderType), mail.getId(), true);
+                    if (item.getItemId() == R.id.action_read) {
+                        item.setVisible(false);
+                        if (item.getItemId() == R.id.action_read) {
+                            detailToolbar.getMenu().getItem(2).setVisible(true);
+                        }
+                        else {
+                            detailToolbar.getMenu().getItem(1).setVisible(true);
+                        }
+                    }
                 }
                 return false;
             }
@@ -173,7 +181,7 @@ public class DetailActivity extends AppCompatActivity implements DetailView {
             @Override
             public void onPageFinished(WebView view, String url) {
                 Log.i(SignActivity.TAG, "page finished");
-                handler.sendEmptyMessageDelayed(0, 1000);
+                handler.sendEmptyMessageDelayed(0, 500);
                 super.onPageFinished(view, url);
             }
 

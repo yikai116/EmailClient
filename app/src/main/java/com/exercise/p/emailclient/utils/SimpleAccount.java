@@ -5,8 +5,10 @@ import android.support.v4.content.ContextCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 
 import com.exercise.p.emailclient.R;
+import com.exercise.p.emailclient.activity.SignActivity;
 
 import java.util.ArrayList;
 
@@ -45,8 +47,16 @@ public class SimpleAccount {
         for (int i = 0; i < tempStrAccounts.length; i++) {
             String temp = tempStrAccounts[i];
             String[] tempStrInfo = temp.split(" +");
-            accounts.add(new SimpleAccount(tempStrInfo[0] == null || tempStrInfo[0].equals("null")
-                    ? null : tempStrInfo[0], tempStrInfo[1]));
+            if (tempStrInfo.length < 1){
+                continue;
+            }
+            if (tempStrInfo.length > 1) {
+                accounts.add(new SimpleAccount(tempStrInfo[0] == null || tempStrInfo[0].equals("null")
+                        ? null : tempStrInfo[0], tempStrInfo[1]));
+            }
+            else {
+                accounts.add(new SimpleAccount(tempStrInfo[0],tempStrInfo[0]));
+            }
         }
         return accounts;
     }
@@ -59,12 +69,24 @@ public class SimpleAccount {
         for (int i = 0; i < tempStrAccounts.length; i++) {
             String temp = tempStrAccounts[i];
             String[] tempStrInfo = temp.split(" +");
-            builder.append(tempStrInfo[0] == null || tempStrInfo[0].equals("null")
-                    ? "" : tempStrInfo[0] + "\n");
-            int start = builder.length();
-            builder.append(tempStrInfo[1]);
-            int end = builder.length();
-            builder.setSpan(blueSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (tempStrInfo.length < 1){
+                continue;
+            }
+            if (tempStrInfo.length > 1) {
+                builder.append(tempStrInfo[0] == null || tempStrInfo[0].equals("null")
+                        ? "" : tempStrInfo[0] + "\n");
+                int start = builder.length();
+                builder.append(tempStrInfo[1]);
+                int end = builder.length();
+                builder.setSpan(blueSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            else {
+                int start = builder.length();
+                builder.append(tempStrInfo[0]);
+                int end = builder.length();
+                builder.setSpan(blueSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
             if (i != tempStrAccounts.length - 1) {
                 builder.append("\n");
             }

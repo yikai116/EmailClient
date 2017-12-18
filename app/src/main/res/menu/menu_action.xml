@@ -13,6 +13,12 @@
         android:icon="@drawable/icon_action_menu_read"
         android:title="已读"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_unread"
+        android:icon="@drawable/icon_action_menu_unread"
+        android:title="未读"
+        app:showAsAction="always"
+        android:visible="false"/>
 
 
 

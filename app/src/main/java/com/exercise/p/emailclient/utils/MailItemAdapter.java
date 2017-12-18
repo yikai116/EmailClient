@@ -1,6 +1,7 @@
 package com.exercise.p.emailclient.utils;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -25,40 +26,35 @@ public class MailItemAdapter extends RecyclerView.Adapter<MailItemAdapter.MyView
 
     private ArrayList<MailPreviewResponse> mails;
 
-    private ArrayList<Boolean> isChoose;
     private Context context;
 
     public MailItemAdapter(ArrayList<MailPreviewResponse> data, Context context) {
         mails = data;
         this.context = context;
-        isChoose = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++) {
-            isChoose.add(false);
-        }
     }
 
-    public void addAccount(MailPreviewResponse email) {
-        this.mails.add(email);
-        this.isChoose.add(false);
+    public void setMails(ArrayList<MailPreviewResponse> mails) {
+        this.mails = mails;
+        notifyDataSetChanged();
     }
 
     public void removeAll(Collection<?> accounts) {
         for (Object o : accounts) {
             this.notifyItemRemoved(this.mails.indexOf(o));
-            this.isChoose.remove(this.mails.indexOf(o));
             this.mails.remove(o);
         }
     }
 
     public void setChoose(int position, boolean choose) {
-        isChoose.set(position, choose);
+        mails.get(position).setChoose(choose);
+        notifyDataSetChanged();
     }
 
     public void setAllChoose(boolean choose) {
-        isChoose = new ArrayList<>();
         for (int i = 0; i < mails.size(); i++) {
-            isChoose.add(choose);
+            mails.get(i).setChoose(choose);
         }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -72,15 +68,15 @@ public class MailItemAdapter extends RecyclerView.Adapter<MailItemAdapter.MyView
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         MailPreviewResponse mail = mails.get(position);
-        Log.i(SignActivity.TAG, "bind " + position + " " + isChoose.get(position));
-        if (isChoose.get(position)) {
+        Log.i(SignActivity.TAG, "bind " + position + " " + mail.isChoose());
+        if (mail.isChoose()) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.colorSelected));
             float scale = context.getResources().getDisplayMetrics().density;
             int dpAsPixels = (int) (8 * scale + 0.5f);
             holder.avatar.setPadding(dpAsPixels, dpAsPixels, dpAsPixels, dpAsPixels);
             holder.avatar.setImageResource(R.drawable.icon_avatar_selected);
         } else {
-            holder.itemView.setBackgroundColor(0);
+            holder.itemView.setBackgroundColor(Color.WHITE);
             holder.avatar.setPadding(0, 0, 0, 0);
             holder.avatar.setImageResource(R.drawable.icon_side_avatar);
         }

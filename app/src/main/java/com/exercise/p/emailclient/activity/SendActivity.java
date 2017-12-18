@@ -2,6 +2,7 @@ package com.exercise.p.emailclient.activity;
 
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -21,16 +22,20 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.R;
 import com.exercise.p.emailclient.databinding.ActivitySendBinding;
+import com.exercise.p.emailclient.dto.data.MailBoxResponse;
 import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
 import com.exercise.p.emailclient.dto.param.Mail;
 import com.exercise.p.emailclient.presenter.SendPresenter;
+import com.exercise.p.emailclient.utils.MemoryAccess;
 import com.exercise.p.emailclient.utils.SimpleAccount;
 import com.exercise.p.emailclient.view.SendView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import io.github.mthli.knife.KnifeText;
 
@@ -112,6 +117,14 @@ public class SendActivity extends AppCompatActivity implements SendView {
                     mail.setHtmlBody(knife.toHtml());
                     presenter.send(mail);
                 }
+                if (item.getItemId() == R.id.action_save) {
+//                    try {
+//                        MemoryAccess.saveCourseToSD();
+//                        showMessage("存放成功");
+//                    } catch (IOException e) {
+//                        showMessage("存放失败");
+//                    }
+                }
                 return false;
             }
         });
@@ -153,6 +166,36 @@ public class SendActivity extends AppCompatActivity implements SendView {
     public void OnTextFocusChange(boolean hasFocus) {
         Log.i(SignActivity.TAG, "hasFocus: " + hasFocus);
         binding.setShow(hasFocus);
+    }
+
+    @OnClick(R.id.send_from)
+    public void OnSendFromClick() {
+        Log.i(SignActivity.TAG, "send activity click from");
+        ArrayList<String> accounts = new ArrayList<>();
+        for (MailBoxResponse box : GlobalInfo.mailBoxResponses) {
+            accounts.add(box.getAccount());
+        }
+        new MaterialDialog.Builder(this)
+                .title("选择邮箱")
+                .items(accounts)
+                .backgroundColor(Color.WHITE)
+                .contentColor(getResources().getColor(R.color.colorTextBlack))
+                .titleColor(getResources().getColor(R.color.colorTextBlack))
+                .itemsColor(getResources().getColor(R.color.colorTextBlack))
+                .widgetColor(getResources().getColor(R.color.colorTextBlack))
+                .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        Log.i(SignActivity.TAG, "dialog callback called -- text:: " + text);
+                        if (text != null && text.length() > 0) {
+                            mail.setFrom((String) text);
+                            binding.setMail(mail);
+                        }
+                        return true;
+                    }
+                })
+                .positiveText("确定")
+                .show();
     }
 
     private void initTool() {

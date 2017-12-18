@@ -2,12 +2,15 @@ package com.exercise.p.emailclient.dto.param;
 
 
 import com.exercise.p.emailclient.GlobalInfo;
+import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
+import com.google.gson.Gson;
 
 import java.util.Date;
 
 
 public class Mail {
 
+    private int id;
     private String subject;
     private String from;
     private String htmlBody;
@@ -23,6 +26,14 @@ public class Mail {
         // html ： text/html;charset=utf-8
         // text ： text/plain;charset=utf-8
         this.contentType = "text/html;charset=utf-8";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getSubject() {
@@ -71,5 +82,14 @@ public class Mail {
 
     public void setSendDate(Date sendDate) {
         this.sendDate = sendDate;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
+    }
+
+    public static Mail toObject(String s){
+        return new Gson().fromJson(s,Mail.class);
     }
 }

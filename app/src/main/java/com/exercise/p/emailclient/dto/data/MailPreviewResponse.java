@@ -35,6 +35,16 @@ public class MailPreviewResponse {
 
     private long sendDate;
 
+    private boolean isChoose = false;
+
+    public boolean isChoose() {
+        return isChoose;
+    }
+
+    public void setChoose(boolean choose) {
+        isChoose = choose;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -109,8 +119,10 @@ public class MailPreviewResponse {
 
     @Override
     public String toString() {
-        this.setTextBody("text");
-        this.setHtmlBody("html");
         return new Gson().toJson(this);
+    }
+
+    public static MailPreviewResponse toObject(String s){
+        return new Gson().fromJson(s,MailPreviewResponse.class);
     }
 }
