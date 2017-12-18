@@ -71,17 +71,18 @@ public class DetailPresenter {
     }
 
     public void markAsSeen(int folderId, int mailId, final boolean finish){
-        view.showProgress(true);
+        if (finish)
+            view.showProgress(true);
         Call<MyResponse> call = model.markAsSeen(GlobalInfo.activeId, folderId, mailId);
         call.enqueue(new Callback<MyResponse>() {
             @Override
             public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                view.showProgress(false);
                 try {
                     Log.i(SignActivity.TAG, "mark response: " + response.code());
                     if (response.body().getCode() == 200) {
                         GlobalInfo.Main2DetailIsChange = true;
                         if (finish) {
+                            view.showProgress(false);
                             view.showMessage("标记成功");
                             view.finishActivity();
                         }
