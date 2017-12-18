@@ -1,7 +1,10 @@
 package com.exercise.p.emailclient.utils;
 
 import android.os.Environment;
+import android.util.Log;
 
+import com.exercise.p.emailclient.GlobalInfo;
+import com.exercise.p.emailclient.activity.SignActivity;
 import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
 import com.exercise.p.emailclient.dto.param.Mail;
 
@@ -25,7 +28,7 @@ public class MemoryAccess {
         if (!myDir.exists()) {
             myDir.mkdirs();
         }
-        myPath = myDir.getPath() + "/info.txt";
+        myPath = myDir.getPath() + "/" + GlobalInfo.activeId + ".txt";
         myDir = new File(myPath);
         if (!myDir.exists())
             myDir.createNewFile();
@@ -39,9 +42,10 @@ public class MemoryAccess {
     }
 
     public static ArrayList<MailPreviewResponse> readCourseFromSD() throws IOException {
+        Log.i(SignActivity.TAG,"read from SD id" + GlobalInfo.activeId);
         ArrayList<MailPreviewResponse> courses = new ArrayList<>();
         File sdDir = Environment.getExternalStorageDirectory();
-        String myPath = sdDir.getPath() + "/Email/info.txt";
+        String myPath = sdDir.getPath() + "/Email/" + GlobalInfo.activeId + ".txt";
         File myDir = new File(myPath);
         BufferedReader reader = new BufferedReader(new FileReader(myDir.getPath()));
 
