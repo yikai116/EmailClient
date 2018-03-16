@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -12,6 +13,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@android:color/white">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/sign_up_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="?colorPrimary"
+            android:translationZ="2dp"
+            app:title="注册">
+        </android.support.v7.widget.Toolbar>
 
         <LinearLayout
             android:id="@+id/sign_root"
@@ -33,7 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_sign_edit"
-                    android:drawableStart="@drawable/icon_sign_username"
+                    android:drawableStart="@drawable/icon_sign_email"
                     android:text="@={user.email}"
                     android:hint="@string/emailHint"
                     android:inputType="textEmailAddress"
@@ -46,10 +56,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/shape_sign_edit"
-                    android:drawableStart="@drawable/icon_sign_userpsw"
+                    android:drawableStart="@drawable/icon_sign_username"
                     android:text="@={user.userName}"
-                    android:hint="@string/pswHint"
-                    android:inputType="textPassword"
+                    android:hint="@string/userName"
+                    android:inputType="text"
                     android:lines="1" />
 
                 <EditText

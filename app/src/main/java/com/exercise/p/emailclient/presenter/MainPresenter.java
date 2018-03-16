@@ -226,16 +226,6 @@ public class MainPresenter {
         if (mails.size() < 1)
             return;
         boolean seen = !mails.get(0).isSeen();
-//        int hasSeen = 0;
-//        for (MailPreviewResponse email : mails) {
-//            if (email.isSeen())
-//                hasSeen++;
-//        }
-//        if (hasSeen >= (mails.size() + 1) / 2)
-//            seen = true;
-//        else
-//            seen = false;
-
         for (final MailPreviewResponse email : mails) {
             if (email.isSeen() != seen) {
                 email.setSeen(seen);

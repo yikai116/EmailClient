@@ -1,12 +1,13 @@
 package com.exercise.p.emailclient.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -38,6 +39,8 @@ public class SignUpActivity extends AppCompatActivity implements SignView {
     MaterialDialog materialDialog;
     @BindView(R.id.sign_img_check_code)
     ImageView signImgCheckCode;
+    @BindView(R.id.sign_up_toolbar)
+    Toolbar signUpToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +48,25 @@ public class SignUpActivity extends AppCompatActivity implements SignView {
         setContentView(R.layout.activity_sign_up);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up);
         ButterKnife.bind(this);
+        initToolBar();
         presenter = new SignPresenter(this);
         user = new UserSignUp();
         binding.setUser(user);
         initCheckCode();
+    }
+
+    private void initToolBar() {
+        setSupportActionBar(signUpToolbar);
+        signUpToolbar.setNavigationIcon(R.drawable.icon_back);
+        signUpToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SignUpActivity.this.finish();
+
+            }
+        });
+
+        assert getSupportActionBar() != null;
     }
 
     @OnClick(R.id.sign_button_sign_in)

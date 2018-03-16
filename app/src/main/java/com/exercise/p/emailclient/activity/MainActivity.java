@@ -390,16 +390,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CODE && (GlobalInfo.Main2AddIsChange || GlobalInfo.Main2ManageIsChange)) {
+        if (requestCode == CODE && GlobalInfo.Main2AddIsChange) {
             mainPresenter.getAccounts();
             GlobalInfo.Main2AddIsChange = false;
-            GlobalInfo.Main2ManageIsChange = false;
         } else if (GlobalInfo.Main2SendIsChange || GlobalInfo.Main2DetailIsChange) {
             GlobalInfo.Main2SendIsChange = false;
             GlobalInfo.Main2DetailIsChange = false;
             mainPresenter.updateEmail(GlobalInfo.activeId, GlobalInfo.getFolderId(getSelectTag()), getSelectTag());
         }
-
     }
 
     @OnClick(R.id.main_fab)

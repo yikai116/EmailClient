@@ -33,12 +33,13 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
     Toolbar addAccountToolbar;
 
     private int code = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_account);
         Intent intent = getIntent();
-        code = intent.getIntExtra("code",0);
+        code = intent.getIntExtra("code", 0);
         mailBox = new MailBox();
         mailBox.setSmtpPort("465");
         mailBox.setPop3Port("995");
@@ -54,15 +55,24 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
      */
     private void initToolBar() {
         setSupportActionBar(addAccountToolbar);
-        if (GlobalInfo.mailBoxResponses.size() != 0) {
-            addAccountToolbar.setNavigationIcon(R.drawable.icon_back);
-            addAccountToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        addAccountToolbar.setNavigationIcon(R.drawable.icon_back);
+        addAccountToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (code == 1) {
                     AddAccountActivity.this.finish();
                 }
-            });
-        }
+                else {
+                    if (GlobalInfo.mailBoxResponses.size() == 0){
+                        Intent intent = new Intent();
+                        intent.setClass(AddAccountActivity.this, SignActivity.class);
+                        startActivity(intent);
+                        AddAccountActivity.this.finish();
+                    }
+                }
+            }
+        });
+
         assert getSupportActionBar() != null;
     }
 
@@ -103,20 +113,17 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
 
     @Override
     public void finishActivity() {
-        if (GlobalInfo.mailBoxResponses.size() == 0) {
+        //刚刚登录的状态
+        if (code == 0) {
             Intent intent = new Intent();
             intent.setClass(AddAccountActivity.this, MainActivity.class);
             startActivity(intent);
             this.finish();
             return;
         }
-        if (code == 1){
+        //主界面通过按钮进入管理界面返回
+        if (code == 1) {
             GlobalInfo.Main2AddIsChange = true;
-            this.finish();
-            return;
-        }
-        if (code == 2){
-            GlobalInfo.Manage2AddIsChange = true;
             this.finish();
             return;
         }
