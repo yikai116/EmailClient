@@ -1,6 +1,7 @@
 package com.exercise.p.emailclient.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -61,8 +62,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private static final int SIDE_TRASH = 5;
     private static final int SIDE_SETTING = 6;
     private static final int SIDE_FEEDBACK = 7;
+    private static final int SIDE_EXIT = 8;
 
-    private static final int SIDE_ADD_COUNT = 8;
+    private static final int SIDE_ADD_COUNT = 9;
 
     @BindView(R.id.main_recycler_view)
     RecyclerView mainRecyclerView;
@@ -251,6 +253,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
                         new PrimaryDrawerItem().withName("设置").withIdentifier(SIDE_SETTING)
                                 .withIcon(R.drawable.icon_side_setting),
                         new PrimaryDrawerItem().withName("帮助和反馈").withIdentifier(SIDE_FEEDBACK)
+                                .withIcon(R.drawable.icon_side_feedback),
+                        new PrimaryDrawerItem().withName("退出登录").withIdentifier(SIDE_EXIT)
                                 .withIcon(R.drawable.icon_side_feedback)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -268,6 +272,19 @@ public class MainActivity extends AppCompatActivity implements MainView {
                                 Intent intent = new Intent();
                                 intent.setClass(MainActivity.this, FeedbackActivity.class);
                                 startActivity(intent);
+                                break;
+                            case SIDE_EXIT:
+                                temp = side_select;
+                                result.setSelection(side_select, false);
+                                Intent intentExit = new Intent();
+                                intentExit.setClass(MainActivity.this, SignActivity.class);
+                                startActivity(intentExit);
+                                SharedPreferences preferences = getSharedPreferences("Info", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = preferences.edit();
+                                GlobalInfo.user.setAccessToken("");
+                                editor.putString("token", "");
+                                editor.apply();
+                                MainActivity.this.finish();
                                 break;
                             default:
                                 side_select = temp;

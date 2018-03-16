@@ -2,15 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="show"
-            type="Boolean" />
         <variable
             name="user"
-            type="com.exercise.p.emailclient.dto.param.User"/>
+            type="com.exercise.p.emailclient.dto.param.UserSignUp"/>
     </data>
 
     <LinearLayout
@@ -24,19 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:contentDescription="@string/logo"
-                android:src="@drawable/logo"
-                android:visibility="@{show? View.VISIBLE:View.GONE}" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,6 +37,19 @@
                     android:text="@={user.email}"
                     android:hint="@string/emailHint"
                     android:inputType="textEmailAddress"
+                    android:lines="1" />
+
+                <EditText
+                    android:id="@+id/sign_edit_user_name"
+                    style="@style/SignEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/shape_sign_edit"
+                    android:drawableStart="@drawable/icon_sign_userpsw"
+                    android:text="@={user.userName}"
+                    android:hint="@string/pswHint"
+                    android:inputType="textPassword"
                     android:lines="1" />
 
                 <EditText
@@ -115,25 +109,16 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="25dp"
                     android:background="@drawable/shape_4corner_3dp_themecolor"
-                    android:text="@string/signIn"
+                    android:text="@string/signUp"
                     android:textColor="#FFF"
                     android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/sign_button_to_register"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:gravity="end"
-                    android:text="→点此注册"/>
 
             </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3"
-                android:visibility="@{show? View.VISIBLE:View.GONE}"/>
+                android:layout_weight="3"/>
         </LinearLayout>
 
 

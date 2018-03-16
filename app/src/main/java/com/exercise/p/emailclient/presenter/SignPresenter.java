@@ -7,10 +7,13 @@ import com.exercise.p.emailclient.GlobalInfo;
 import com.exercise.p.emailclient.dto.MyResponse;
 import com.exercise.p.emailclient.dto.data.UserInfoResponse;
 import com.exercise.p.emailclient.dto.param.User;
+import com.exercise.p.emailclient.dto.param.UserSignUp;
 import com.exercise.p.emailclient.model.RetrofitInstance;
 import com.exercise.p.emailclient.model.SignModel;
 import com.exercise.p.emailclient.utils.FormatUtils;
 import com.exercise.p.emailclient.view.SignView;
+
+import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -79,8 +82,7 @@ public class SignPresenter {
                 try {
                     Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
                     view.showCheckImg(bitmap);
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     view.showMessage("网络错误，请稍后再试");
                 }
@@ -88,6 +90,45 @@ public class SignPresenter {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                view.showMessage("网络错误，请稍后再试");
+                t.printStackTrace();
+            }
+        });
+    }
+
+    public void signUp(UserSignUp user) {
+        if (!FormatUtils.emailFormat(user.getEmail())) {
+            view.showMessage("邮箱格式错误");
+            return;
+        }
+        if (user.getPassword().length() < 6) {
+            view.showMessage("密码格式错误");
+            return;
+        }
+        if (user.getCheckCode().length() < 4) {
+            view.showMessage("验证码格式错误");
+            return;
+        }
+        if (user.getUserName().length() == 0) {
+            view.showMessage("用户名错误");
+            return;
+        }
+        view.showProgress(true);
+        Call<MyResponse<Object>> call = signModel.signUp(user, cookie);
+        call.enqueue(new Callback<MyResponse<Object>>() {
+            @Override
+            public void onResponse(Call<MyResponse<Object>> call, Response<MyResponse<Object>> response) {
+                view.showProgress(false);
+                MyResponse<Object> myResponse = response.body();
+                view.showMessage(myResponse.getMessage());
+                if (myResponse.getCode() == 200) {
+                    view.toMainActivity();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse<Object>> call, Throwable t) {
+                view.showProgress(false);
                 view.showMessage("网络错误，请稍后再试");
                 t.printStackTrace();
             }

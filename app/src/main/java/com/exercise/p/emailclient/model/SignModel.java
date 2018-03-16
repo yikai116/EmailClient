@@ -27,6 +27,12 @@ public interface SignModel {
             @Header("Cookie") String cookie
     );
 
+    @POST("user/register")
+    Call<MyResponse<Object>> signUp(
+            @Body com.exercise.p.emailclient.dto.param.UserSignUp user,
+            @Header("Cookie") String cookie
+    );
+
     @GET("user/authCode")
     Call<ResponseBody> getCheckImg(
             @Query("a") String a

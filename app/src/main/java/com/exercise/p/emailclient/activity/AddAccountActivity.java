@@ -23,10 +23,8 @@ import butterknife.OnClick;
 
 public class AddAccountActivity extends AppCompatActivity implements AddAccountView {
 
-
     ActivityAddAccountBinding binding;
     MailBox mailBox;
-
 
     AddAccountPresenter presenter;
 
@@ -42,12 +40,8 @@ public class AddAccountActivity extends AppCompatActivity implements AddAccountV
         Intent intent = getIntent();
         code = intent.getIntExtra("code",0);
         mailBox = new MailBox();
-//        mailBox.setSmtpServer("smtp.163.com");
         mailBox.setSmtpPort("465");
-//        mailBox.setPop3Server("pop.163.com");
         mailBox.setPop3Port("995");
-//        mailBox.setAccount("15196673448@163.com");
-//        mailBox.setPassword("yk123456");
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_account);
         binding.setMailBox(mailBox);
         ButterKnife.bind(this);

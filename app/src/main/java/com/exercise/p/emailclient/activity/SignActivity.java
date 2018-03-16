@@ -107,6 +107,12 @@ public class SignActivity extends AppCompatActivity implements SignView {
         presenter.sign(user);
     }
 
+    @OnClick(R.id.sign_button_to_register)
+    public void signUp(){
+        Intent intent = new Intent(SignActivity.this,SignUpActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void showMessage(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
