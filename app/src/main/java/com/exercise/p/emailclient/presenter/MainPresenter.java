@@ -1,5 +1,6 @@
 package com.exercise.p.emailclient.presenter;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.exercise.p.emailclient.GlobalInfo;
@@ -13,6 +14,9 @@ import com.exercise.p.emailclient.model.EmailModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;
 import com.exercise.p.emailclient.utils.MemoryAccess;
 import com.exercise.p.emailclient.view.MainView;
+
+import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -124,12 +128,20 @@ public class MainPresenter {
                         folder.setId(-100);
                         folder.setAlias("caogaoxiang");
                         folder.setFolderType("DRAFT");
-                        try {
-                            folder.setMailList(MemoryAccess.readDraftFromSD());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            view.showMessage("内存读取错误");
+                        StringBuilder condition = new StringBuilder("from = ");
+                        int tempLength = GlobalInfo.mailBoxResponses.size();
+                        for (int i = 0; i < tempLength; i++) {
+                            condition.append("'" + GlobalInfo.mailBoxResponses.get(i).getAccount() + "'");
+                            if (i != GlobalInfo.mailBoxResponses.size() - 1) {
+                                condition.append(" or from = ");
+                            }
                         }
+
+                        List<MailPreviewResponse> list = DataSupport.where(
+                                condition.toString())
+                                .order("sendDate").find(MailPreviewResponse.class);
+                        Log.i("SQLITE", "size  =  " + list.size());
+                        folder.setMailList(list);
                         GlobalInfo.allMail.add(folder);
                     } else {
                         view.showMessage("抱歉，发生错误");
