@@ -1,9 +1,10 @@
 package com.exercise.p.emailclient.dto.data;
 
-import com.exercise.p.emailclient.dto.param.Mail;
 import com.google.gson.Gson;
 
-public class MailPreviewResponse {
+import org.litepal.crud.DataSupport;
+
+public class MailPreviewResponse extends DataSupport {
     /**
      * contentType : multipart/alternative; boundary="001a11498fd0a17be205605ec148"
      * from : 毛昌越 <scumchy@gmail.com>,
