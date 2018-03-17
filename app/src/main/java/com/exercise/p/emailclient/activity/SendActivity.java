@@ -83,12 +83,14 @@ public class SendActivity extends AppCompatActivity implements SendView {
                 mail.setTo(stringBuilder.toString());
             } else {
                 mail.setSubject(temp.getSubject());
+                mail.setTo(temp.getTo());
                 if (temp.getTextBody() == null || temp.getTextBody().equals(""))
                     knife.fromHtml(temp.getHtmlBody());
                 else
                     knife.setText(temp.getTextBody());
             }
         }
+        Log.i("SEND",mail.getTo());
         binding.setMail(mail);
     }
 

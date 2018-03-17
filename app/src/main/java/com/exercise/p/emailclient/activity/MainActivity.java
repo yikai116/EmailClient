@@ -372,7 +372,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         } else
             adapter.setMails(mails);
         if (side_select == SIDE_DRAFT) {
-            adapter.setAllChoose(false);
             adapter.setOnItemClickListener(mDraftOnItemClickListener);
         } else {
             adapter.setOnItemClickListener(mOnItemClickListener);
