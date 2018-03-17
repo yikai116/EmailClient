@@ -228,39 +228,42 @@ public class MainPresenter {
         boolean seen = !mails.get(0).isSeen();
         if (folderId == GlobalInfo.DRAFT_ID) {
             for (MailPreviewResponse mail : mails) {
-                mail.setSeen(seen);
-                mail.save();
+                if (mail.isSeen() != seen) {
+                    mail.setSeen(seen);
+                    mail.save();
+                }
             }
-            return;
         }
-        for (final MailPreviewResponse email : mails) {
-            if (email.isSeen() != seen) {
-                email.setSeen(seen);
-                Call<MyResponse> call = emailModel.markAsSeen(
-                        GlobalInfo.activeId, folderId, email.getId());
-                call.enqueue(new Callback<MyResponse>() {
-                    @Override
-                    public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                        view.showProgress(false);
-                        try {
-                            if (response.body().getCode() != 200) {
+        else {
+            for (final MailPreviewResponse email : mails) {
+                if (email.isSeen() != seen) {
+                    email.setSeen(seen);
+                    Call<MyResponse> call = emailModel.markAsSeen(
+                            GlobalInfo.activeId, folderId, email.getId());
+                    call.enqueue(new Callback<MyResponse>() {
+                        @Override
+                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                            view.showProgress(false);
+                            try {
+                                if (response.body().getCode() != 200) {
+                                    view.showMessage("抱歉，发生错误");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 view.showMessage("抱歉，发生错误");
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            view.showMessage("抱歉，发生错误");
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<MyResponse> call, Throwable t) {
-                        call.cancel();
-                        email.setSeen(!email.isSeen());
-                        view.setData(GlobalInfo.getMailsByBox(GlobalInfo.getFolderName(folderId)));
-                        view.showMessage("网络错误，请稍后再试");
-                        t.printStackTrace();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<MyResponse> call, Throwable t) {
+                            call.cancel();
+                            email.setSeen(!email.isSeen());
+                            view.setData(GlobalInfo.getMailsByBox(GlobalInfo.getFolderName(folderId)));
+                            view.showMessage("网络错误，请稍后再试");
+                            t.printStackTrace();
+                        }
+                    });
+                }
             }
         }
         view.setData(GlobalInfo.getMailsByBox(GlobalInfo.getFolderName(folderId)));
