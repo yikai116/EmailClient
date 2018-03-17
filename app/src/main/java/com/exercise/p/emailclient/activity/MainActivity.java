@@ -110,18 +110,17 @@ public class MainActivity extends AppCompatActivity implements MainView {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             //当actions的item被点击时回掉
-            if (item.getItemId() == R.id.action_delete)
-                mainPresenter.deleteEmails(mail_del, GlobalInfo.getFolderId(getSelectTag()));
-            else {
-                mainPresenter.markAsSeen(mail_del, GlobalInfo.getFolderId(getSelectTag()));
-                item.setVisible(false);
-                if (item.getItemId() == R.id.action_read) {
-                    mode.getMenu().getItem(2).setVisible(true);
-                }
+                if (item.getItemId() == R.id.action_delete)
+                    mainPresenter.deleteEmails(mail_del, GlobalInfo.getFolderId(getSelectTag()));
                 else {
-                    mode.getMenu().getItem(1).setVisible(true);
+                    mainPresenter.markAsSeen(mail_del, GlobalInfo.getFolderId(getSelectTag()));
+                    item.setVisible(false);
+                    if (item.getItemId() == R.id.action_read) {
+                        mode.getMenu().getItem(2).setVisible(true);
+                    } else {
+                        mode.getMenu().getItem(1).setVisible(true);
+                    }
                 }
-            }
             return false;
         }
 
@@ -372,10 +371,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
             mainRecyclerView.setAdapter(adapter);
         } else
             adapter.setMails(mails);
-        if (side_select == SIDE_DRAFT){
+        if (side_select == SIDE_DRAFT) {
+            adapter.setAllChoose(false);
             adapter.setOnItemClickListener(mDraftOnItemClickListener);
-        }
-        else {
+        } else {
             adapter.setOnItemClickListener(mOnItemClickListener);
         }
     }
@@ -431,6 +430,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
             add2Del(view, position);
         }
     };
+
     private MailItemAdapter.OnItemClickListener mDraftOnItemClickListener = new MailItemAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
@@ -477,7 +477,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
             @Override
             public void onRefresh() {
                 swipeRefreshWidget.setRefreshing(true);
-                Log.i(SignActivity.TAG, "refresh");
                 mainPresenter.updateEmail(activeId, GlobalInfo.getFolderId(getSelectTag()), getSelectTag());
                 swipeRefreshWidget.setRefreshing(false);
             }

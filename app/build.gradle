@@ -20,6 +20,7 @@ android {
     dataBinding {
         enabled = true
     }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
 repositories {
@@ -64,4 +65,5 @@ dependencies {
     compile 'com.afollestad.material-dialogs:commons:0.9.6.0'
 
     compile 'com.github.mthli:Knife:v1.1'
+    compile 'org.litepal.android:core:1.6.1'
 }

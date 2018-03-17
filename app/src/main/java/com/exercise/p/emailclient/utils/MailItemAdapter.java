@@ -68,7 +68,6 @@ public class MailItemAdapter extends RecyclerView.Adapter<MailItemAdapter.MyView
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         MailPreviewResponse mail = mails.get(position);
-        Log.i(SignActivity.TAG, "bind " + position + " " + mail.isChoose());
         if (mail.isChoose()) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.colorSelected));
             float scale = context.getResources().getDisplayMetrics().density;

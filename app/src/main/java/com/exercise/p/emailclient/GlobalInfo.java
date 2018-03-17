@@ -7,6 +7,7 @@ import com.exercise.p.emailclient.dto.data.MailBoxResponse;
 import com.exercise.p.emailclient.dto.data.FolderResponse;
 import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
 import com.exercise.p.emailclient.dto.data.UserInfoResponse;
+import com.exercise.p.emailclient.utils.SQLiteAccess;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class GlobalInfo {
     public static boolean Main2SendIsChange = false;
     public static boolean Main2DetailIsChange = false;
     public static List<FolderResponse> allMail = new ArrayList<>();
+    public static int DRAFT_ID = -100;
 
     // 当前邮箱账户id
     public static int activeId = 0;
@@ -33,15 +35,21 @@ public class GlobalInfo {
                 return (ArrayList<MailPreviewResponse>) folder.getMailList();
             }
         }
-        Log.i(SignActivity.TAG, "get null");
-        return new ArrayList<MailPreviewResponse>();
+        return new ArrayList<>();
     }
 
     public static void updateMail(int folderId, ArrayList<MailPreviewResponse> mails) {
         for (FolderResponse folder : GlobalInfo.allMail) {
             if (folder.getId().equals(folderId)) {
-                folder.getMailList().clear();
-                folder.getMailList().addAll(mails);
+                if (folderId == DRAFT_ID) {
+                    folder.getMailList().clear();
+                    folder.getMailList().addAll(SQLiteAccess.readDraft());
+                } else {
+                    if (mails != null) {
+                        folder.getMailList().clear();
+                        folder.getMailList().addAll(mails);
+                    }
+                }
             }
         }
     }

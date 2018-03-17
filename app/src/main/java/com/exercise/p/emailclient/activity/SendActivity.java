@@ -26,11 +26,9 @@ import com.exercise.p.emailclient.dto.data.MailBoxResponse;
 import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
 import com.exercise.p.emailclient.dto.param.Mail;
 import com.exercise.p.emailclient.presenter.SendPresenter;
-import com.exercise.p.emailclient.utils.MemoryAccess;
 import com.exercise.p.emailclient.utils.SimpleAccount;
 import com.exercise.p.emailclient.view.SendView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -73,7 +71,6 @@ public class SendActivity extends AppCompatActivity implements SendView {
 
         if (folderType != null && position != -1) {
             int action = getIntent().getIntExtra("action", DetailActivity.FORWARD);
-            Log.i(SignActivity.TAG, "action: " + action);
             temp = GlobalInfo.getMailsByBox(folderType).get(position);
             if (action == DetailActivity.REPLY) {
                 mail.setSubject("Re:" + temp.getSubject());
@@ -87,7 +84,7 @@ public class SendActivity extends AppCompatActivity implements SendView {
             } else {
                 mail.setSubject(temp.getSubject());
                 if (temp.getTextBody() == null || temp.getTextBody().equals(""))
-                    knife.setText(temp.getHtmlBody());
+                    knife.fromHtml(temp.getHtmlBody());
                 else
                     knife.setText(temp.getTextBody());
             }
@@ -152,21 +149,18 @@ public class SendActivity extends AppCompatActivity implements SendView {
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if (DialogAction.POSITIVE == which) {
                             if (!mail.getTo().equals("") || !mail.getSubject().equals("") || !mail.getHtmlBody().equals("")) {
-                                try {
-                                    if (temp == null) {
-                                        temp = new MailPreviewResponse();
-                                    }
-                                    temp.setContentType(mail.getContentType());
-                                    temp.setFrom(mail.getFrom());
-                                    temp.setTo(mail.getTo().trim());
-                                    temp.setSubject(mail.getSubject().trim());
-                                    temp.setHtmlBody(knife.toHtml());
-                                    temp.setSendDate(new Date().getTime());
-                                    GlobalInfo.getMailsByBox("DRAFT").add(temp);
-                                    MemoryAccess.saveDraftToSD();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+
+                                if (temp == null) {
+                                    temp = new MailPreviewResponse();
                                 }
+                                temp.setContentType(mail.getContentType());
+                                temp.setFrom(mail.getFrom());
+                                temp.setTo(mail.getTo().trim());
+                                temp.setSubject(mail.getSubject().trim());
+                                temp.setHtmlBody(knife.toHtml());
+                                temp.setSendDate(new Date().getTime());
+                                GlobalInfo.getMailsByBox("DRAFT").add(temp);
+                                temp.save();
                             }
                         }
                         SendActivity.super.onBackPressed();

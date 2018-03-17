@@ -1,6 +1,5 @@
 package com.exercise.p.emailclient.presenter;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.exercise.p.emailclient.GlobalInfo;
@@ -12,13 +11,11 @@ import com.exercise.p.emailclient.dto.data.MailPreviewResponse;
 import com.exercise.p.emailclient.model.AccountModel;
 import com.exercise.p.emailclient.model.EmailModel;
 import com.exercise.p.emailclient.model.RetrofitInstance;
-import com.exercise.p.emailclient.utils.MemoryAccess;
+import com.exercise.p.emailclient.utils.SQLiteAccess;
 import com.exercise.p.emailclient.view.MainView;
 
-import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,20 +125,7 @@ public class MainPresenter {
                         folder.setId(-100);
                         folder.setAlias("caogaoxiang");
                         folder.setFolderType("DRAFT");
-                        StringBuilder condition = new StringBuilder("from = ");
-                        int tempLength = GlobalInfo.mailBoxResponses.size();
-                        for (int i = 0; i < tempLength; i++) {
-                            condition.append("'" + GlobalInfo.mailBoxResponses.get(i).getAccount() + "'");
-                            if (i != GlobalInfo.mailBoxResponses.size() - 1) {
-                                condition.append(" or from = ");
-                            }
-                        }
-
-                        List<MailPreviewResponse> list = DataSupport.where(
-                                condition.toString())
-                                .order("sendDate").find(MailPreviewResponse.class);
-                        Log.i("SQLITE", "size  =  " + list.size());
-                        folder.setMailList(list);
+                        folder.setMailList(SQLiteAccess.readDraft());
                         GlobalInfo.allMail.add(folder);
                     } else {
                         view.showMessage("抱歉，发生错误");
@@ -162,9 +146,6 @@ public class MainPresenter {
 
     // 更新数据库邮件
     public void updateEmail(final int boxId, final int folderId, final String boxType) {
-        Log.i(SignActivity.TAG, "update boxId:" + boxId);
-        Log.i(SignActivity.TAG, "update folderId:" + folderId);
-        Log.i(SignActivity.TAG, "update boxType:" + boxType);
         final Call<MyResponse<List<MailPreviewResponse>>> folder = emailModel.updateFolder(boxId, folderId);
         folder.enqueue(new Callback<MyResponse<List<MailPreviewResponse>>>() {
             @Override
@@ -199,6 +180,13 @@ public class MainPresenter {
     public void deleteEmails(ArrayList<MailPreviewResponse> mails, int folderId) {
         if (mails.size() < 1)
             return;
+        if (folderId == GlobalInfo.DRAFT_ID) {
+            for (MailPreviewResponse temp : mails) {
+                temp.delete();
+            }
+            view.deleteSuccess();
+            return;
+        }
         view.showProgress(true);
         List<Integer> list = new ArrayList<>();
         for (MailPreviewResponse email : mails) {
@@ -238,6 +226,13 @@ public class MainPresenter {
         if (mails.size() < 1)
             return;
         boolean seen = !mails.get(0).isSeen();
+        if (folderId == GlobalInfo.DRAFT_ID) {
+            for (MailPreviewResponse mail : mails) {
+                mail.setSeen(seen);
+                mail.save();
+            }
+            return;
+        }
         for (final MailPreviewResponse email : mails) {
             if (email.isSeen() != seen) {
                 email.setSeen(seen);
@@ -248,7 +243,6 @@ public class MainPresenter {
                     public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                         view.showProgress(false);
                         try {
-                            Log.i(SignActivity.TAG, email.getId() + " response: " + response.code());
                             if (response.body().getCode() != 200) {
                                 view.showMessage("抱歉，发生错误");
                             }

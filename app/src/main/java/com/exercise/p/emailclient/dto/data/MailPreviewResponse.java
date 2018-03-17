@@ -29,7 +29,7 @@ public class MailPreviewResponse extends DataSupport {
     // html
     private String htmlBody;
 
-    private boolean seen;
+    private boolean seen = true;
 
     private String to;
 

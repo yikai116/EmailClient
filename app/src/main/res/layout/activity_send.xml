@@ -152,17 +152,6 @@
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp">
 
-                        <!--<EditText-->
-                        <!--android:id="@+id/send_text"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:background="@null"-->
-                        <!--android:hint="@string/writeEmail"-->
-                        <!--android:inputType="textMultiLine"-->
-                        <!--android:minLines="1"-->
-                        <!--android:text="@={mail.htmlBody}"-->
-                        <!--android:textColor="@color/colorTextBlack" />-->
-
                         <io.github.mthli.knife.KnifeText
                             android:id="@+id/knife"
                             android:layout_width="match_parent"
